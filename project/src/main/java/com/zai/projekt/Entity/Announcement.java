@@ -11,6 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 @Entity
 @Table(name="announcement")
 public class Announcement implements Serializable{
@@ -35,61 +39,4 @@ public class Announcement implements Serializable{
 	private Date endDate;
 	@Column(name="category_id")
 	private int categoryId;
-	public int getAnnouncementId() {
-		return announcementId;
-	}
-	public void setAnnouncementId(int announcementId) {
-		this.announcementId = announcementId;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public BigDecimal getPrice() {
-		return price;
-	}
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-	public int getStatusId() {
-		return statusId;
-	}
-	public void setStatusId(int statusId) {
-		this.statusId = statusId;
-	}
-	public Date getStartDate() {
-		return startDate;
-	}
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-	public Date getEndDate() {
-		return endDate;
-	}
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-	public int getCategoryId() {
-		return categoryId;
-	}
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 }
