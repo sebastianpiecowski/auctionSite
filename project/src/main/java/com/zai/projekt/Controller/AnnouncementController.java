@@ -24,7 +24,7 @@ import com.zai.projekt.Entity.Announcement;
 import com.zai.projekt.Service.IAnnouncementService;
 
 @RestController
-@RequestMapping("user")
+//@RequestMapping("user")
 @CrossOrigin(origins = {"http://localhost:4200"})
 public class AnnouncementController {
 	@Autowired

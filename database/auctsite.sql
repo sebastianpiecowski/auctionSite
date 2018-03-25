@@ -1,4 +1,4 @@
--- phpMyAdmin SQL Dump
+﻿-- phpMyAdmin SQL Dump
 -- version 4.7.7
 -- https://www.phpmyadmin.net/
 --
@@ -27,7 +27,8 @@ SET time_zone = "+00:00";
 --
 -- Struktura tabeli dla tabeli `announcement`
 --
-
+CREATE DATABASE auctsite;
+USE auctsite;
 CREATE TABLE `announcement` (
   `announcement_id` int(11) NOT NULL,
   `title` varchar(50) NOT NULL,
