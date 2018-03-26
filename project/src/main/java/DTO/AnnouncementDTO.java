@@ -1,4 +1,4 @@
-package com.zai.projekt.Controller;
+package DTO;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
-public class AnnouncementInfo {
+public class AnnouncementDTO {
 	@JsonInclude(Include.NON_NULL)
 	private int announcementId;
 	@JsonInclude (Include.NON_NULL)
@@ -27,9 +27,4 @@ public class AnnouncementInfo {
 	private Date startDate;
 	@JsonInclude (Include.NON_NULL)
 	private Date endDate;
-	@JsonInclude (Include.NON_NULL)
-	private int categoryId;
-
-	
-	
 }

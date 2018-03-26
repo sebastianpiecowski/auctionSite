@@ -19,9 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.zai.projekt.Controller.AnnouncementInfo;
-import com.zai.projekt.Entity.Announcement;
-import com.zai.projekt.Service.IAnnouncementService;
+import com.zai.projekt.Entity.AnnouncementEntity;
+import com.zai.projekt.IService.IAnnouncementService;
+
+import DTO.AnnouncementDTO;
 
 @RestController
 //@RequestMapping("user")
@@ -32,30 +33,45 @@ public class AnnouncementController {
 
 	// fetch announcement by id
 	@GetMapping(value = "announcement/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<AnnouncementInfo> getAnnouncementById(@PathVariable("id") Integer id) {
-		AnnouncementInfo ae = new AnnouncementInfo();
+	public ResponseEntity<AnnouncementDTO> getAnnouncementById(@PathVariable("id") Integer id) {
+		AnnouncementDTO ae = new AnnouncementDTO();
 		BeanUtils.copyProperties(announcementService.getAnnouncementById(id), ae);
-		return new ResponseEntity<AnnouncementInfo>(ae, HttpStatus.OK);
+		return new ResponseEntity<AnnouncementDTO>(ae, HttpStatus.OK);
 	}
 
 	// fetch all announcements
 	@GetMapping(value = "announcements", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<AnnouncementInfo>> getAllAnnouncements() {
-		List<AnnouncementInfo> responseAnnouncementList = new ArrayList<>();
-		List<Announcement> announcementList = announcementService.getAllAnnouncements();
+	public ResponseEntity<List<AnnouncementDTO>> getAllAnnouncements() {
+		List<AnnouncementDTO> responseAnnouncementList = new ArrayList<>();
+		List<AnnouncementEntity> announcementList = announcementService.getAllAnnouncements();
 		for (int i = 0; i < announcementList.size(); i++) {
-			AnnouncementInfo ae = new AnnouncementInfo();
+			AnnouncementDTO ae = new AnnouncementDTO();
 			BeanUtils.copyProperties(announcementList.get(i), ae);
 			responseAnnouncementList.add(ae);
 		}
-		return new ResponseEntity<List<AnnouncementInfo>>(responseAnnouncementList, HttpStatus.OK);
+		return new ResponseEntity<List<AnnouncementDTO>>(responseAnnouncementList, HttpStatus.OK);
 	}
-
+	@GetMapping(value="announcement/title={title}", produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementByTitle(@PathVariable("title") String title){
+		List<AnnouncementDTO> responseAnnouncementList = new ArrayList<>();
+		List<AnnouncementEntity> announcementList = announcementService.getAnnouncementByTitle(title);
+		for (int i=0; i<announcementList.size(); i++) {
+			AnnouncementDTO ae=new AnnouncementDTO();
+			BeanUtils.copyProperties(announcementList.get(i), ae);
+			responseAnnouncementList.add(ae);
+		}
+		return new ResponseEntity<List<AnnouncementDTO>>(responseAnnouncementList, HttpStatus.OK);
+	}
+	/*@GetMapping(value="announcement/category={category}", produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<List<AnnouncementInfo>> getAnnouncementByCategory(@PathVariable("category") String category){
+		List<AnnoucementInfo> responseAnnouncementList=new ArrayListM<>();
+		List<Announcement> announcementList = announcementService.getAnnou
+	}*/
 	// create new announcement
 	@PostMapping(value = "announcement", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Void> addAnnouncement(@RequestBody AnnouncementInfo announcementInfo,
+	public ResponseEntity<Void> addAnnouncement(@RequestBody AnnouncementDTO announcementInfo,
 			UriComponentsBuilder builder) {
-		Announcement announcement = new Announcement();
+		AnnouncementEntity announcement = new AnnouncementEntity();
 		BeanUtils.copyProperties(announcementInfo, announcement);
 		boolean flag = announcementService.addAnnouncement(announcement);
 		if (flag == false) {

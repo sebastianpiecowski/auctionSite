@@ -9,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -17,7 +20,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name="announcement")
-public class Announcement implements Serializable{
+public class AnnouncementEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -29,14 +32,17 @@ public class Announcement implements Serializable{
 	private String description;
 	@Column(name="price")
 	private BigDecimal price;
-	@Column(name="user_id")
-	private int userId;
-	@Column(name="status_id")
-	private int statusId;
+	@ManyToOne
+	@JoinColumn(name="user_id")
+	private UserEntity user;
+	@ManyToOne
+	@JoinColumn(name="status_id")
+	private StatusEntity status;
 	@Column(name="start_date")
 	private Date startDate;
 	@Column(name="end_date")
 	private Date endDate;
-	@Column(name="category_id")
-	private int categoryId;
+	@ManyToOne
+	@JoinColumn(name="category_id")
+	private CategoryEntity category;
 }
