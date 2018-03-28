@@ -25,8 +25,8 @@ import com.zai.projekt.IService.IAnnouncementService;
 import DTO.AnnouncementDTO;
 
 @RestController
-//@RequestMapping("user")
-@CrossOrigin(origins = {"http://localhost:4200"})
+// @RequestMapping("user")
+@CrossOrigin(origins = { "http://localhost:4200" })
 public class AnnouncementController {
 	@Autowired
 	private IAnnouncementService announcementService;
@@ -51,22 +51,32 @@ public class AnnouncementController {
 		}
 		return new ResponseEntity<List<AnnouncementDTO>>(responseAnnouncementList, HttpStatus.OK);
 	}
-	@GetMapping(value="announcement/title={title}", produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementByTitle(@PathVariable("title") String title){
+
+	@GetMapping(value = "announcement/title={title}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementByTitle(@PathVariable("title") String title) {
 		List<AnnouncementDTO> responseAnnouncementList = new ArrayList<>();
 		List<AnnouncementEntity> announcementList = announcementService.getAnnouncementByTitle(title);
-		for (int i=0; i<announcementList.size(); i++) {
-			AnnouncementDTO ae=new AnnouncementDTO();
+		for (int i = 0; i < announcementList.size(); i++) {
+			AnnouncementDTO ae = new AnnouncementDTO();
 			BeanUtils.copyProperties(announcementList.get(i), ae);
 			responseAnnouncementList.add(ae);
 		}
 		return new ResponseEntity<List<AnnouncementDTO>>(responseAnnouncementList, HttpStatus.OK);
 	}
-	/*@GetMapping(value="announcement/category={category}", produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<List<AnnouncementInfo>> getAnnouncementByCategory(@PathVariable("category") String category){
-		List<AnnoucementInfo> responseAnnouncementList=new ArrayListM<>();
-		List<Announcement> announcementList = announcementService.getAnnou
-	}*/
+
+	@GetMapping(value = "announcement/category={category}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementByCategory(@PathVariable("category") String category) {
+		List<AnnouncementDTO> responseAnnouncementList = new ArrayList<>();
+		List<AnnouncementEntity> announcementList = announcementService.getAnnouncementByCategory(category);
+		for (int i = 0; i < announcementList.size(); i++) {
+			AnnouncementDTO ae = new AnnouncementDTO();
+			BeanUtils.copyProperties(announcementList.get(i), ae);
+			responseAnnouncementList.add(ae);
+		}
+		return new ResponseEntity<List<AnnouncementDTO>>(responseAnnouncementList, HttpStatus.OK);
+
+	}
+
 	// create new announcement
 	@PostMapping(value = "announcement", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Void> addAnnouncement(@RequestBody AnnouncementDTO announcementInfo,
@@ -77,11 +87,13 @@ public class AnnouncementController {
 		if (flag == false) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		HttpHeaders headers=new HttpHeaders();
-		headers.setLocation(builder.path("/announcement/{id}").buildAndExpand(announcement.getAnnouncementId()).toUri());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setLocation(
+				builder.path("/announcement/{id}").buildAndExpand(announcement.getAnnouncementId()).toUri());
 		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
-	@DeleteMapping(value="announcement/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+
+	@DeleteMapping(value = "announcement/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Void> deleteAnnouncement(@PathVariable("id") Integer id) {
 		announcementService.deleteAnnouncement(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

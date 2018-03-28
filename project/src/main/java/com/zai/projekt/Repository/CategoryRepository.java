@@ -1,5 +1,8 @@
 package com.zai.projekt.Repository;
 
-public interface CategoryRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.zai.projekt.Entity.CategoryEntity;
+
+public interface CategoryRepository extends JpaRepository<CategoryEntity, Integer> {
 }

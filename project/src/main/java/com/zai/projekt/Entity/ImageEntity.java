@@ -1,8 +1,6 @@
-package com.zai.projekt.Entity;
+/*package com.zai.projekt.Entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +8,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.mysql.jdbc.Blob;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,14 +20,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "category")
-public class CategoryEntity implements Serializable {
+@Table(name = "image")
+public class ImageEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "category_id")
-	private int categoryId;
-	@Column(name = "name")
-	private String name;
+	@Column(name = "image_id")
+	private int imageId;
+	@Column(name = "image")
+	private Blob image;
+	@ManyToOne
+	@JoinColumn(name = "announcement_id")
+	private AnnouncementEntity announcementId;
 
-}
+}*/

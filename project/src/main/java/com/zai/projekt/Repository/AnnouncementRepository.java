@@ -9,5 +9,5 @@ import com.zai.projekt.Entity.AnnouncementEntity;
 
 public interface AnnouncementRepository extends JpaRepository<AnnouncementEntity, Integer> {
 	List<AnnouncementEntity> findByTitleContaining(String title);
-	List<AnnouncementEntity> findByCategory(String category);
+	List<AnnouncementEntity> findByCategoryNameContaining(String category);
 }

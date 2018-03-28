@@ -50,4 +50,11 @@ public class AnnouncementService implements IAnnouncementService{
 		return list;
 	}
 
+	@Override
+	public List<AnnouncementEntity> getAnnouncementByCategory(String category) {
+		List<AnnouncementEntity> list =new ArrayList<>();
+		announcementRepository.findByCategoryNameContaining(category).forEach(e->list.add(e));
+		return list;
+	}
+
 }
