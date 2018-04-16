@@ -21,7 +21,7 @@ public class StatusEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "status_id")
-	private int categoryId;
+	private int statusId;
 	@Column(name = "status")
 	private String status;
 }

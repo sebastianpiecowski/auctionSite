@@ -26,4 +26,6 @@ public class CategoryService implements ICategoryService {
 		CategoryEntity obj = categoryRepository.findById(id).get();
 		return obj;
 	}
+	
+	
 }

@@ -1,4 +1,4 @@
-package DTO;
+package com.zai.projekt.DTO;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -6,6 +6,7 @@ import java.sql.Date;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.zai.projekt.Entity.CategoryEntity;
+import com.zai.projekt.Entity.StatusEntity;
 import com.zai.projekt.Entity.UserEntity;
 
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class AnnouncementDTO {
 	@JsonInclude(Include.NON_NULL)
 	private UserEntity user;
 	@JsonInclude(Include.NON_NULL)
-	private int status;
+	private StatusEntity status;
 	@JsonInclude(Include.NON_NULL)
 	private Date startDate;
 	@JsonInclude(Include.NON_NULL)

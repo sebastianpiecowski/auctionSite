@@ -19,10 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.zai.projekt.DTO.AnnouncementDTO;
 import com.zai.projekt.Entity.AnnouncementEntity;
 import com.zai.projekt.IService.IAnnouncementService;
-
-import DTO.AnnouncementDTO;
 
 @RestController
 // @RequestMapping("user")
@@ -67,7 +66,7 @@ public class AnnouncementController {
 	@GetMapping(value = "announcement/category={category}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementByCategory(@PathVariable("category") String category) {
 		List<AnnouncementDTO> responseAnnouncementList = new ArrayList<>();
-		List<AnnouncementEntity> announcementList = announcementService.getAnnouncementByCategory(category);
+		List<AnnouncementEntity> announcementList = announcementService.getAnnouncementByCategoryName(category);
 		for (int i = 0; i < announcementList.size(); i++) {
 			AnnouncementDTO ae = new AnnouncementDTO();
 			BeanUtils.copyProperties(announcementList.get(i), ae);
@@ -76,7 +75,17 @@ public class AnnouncementController {
 		return new ResponseEntity<List<AnnouncementDTO>>(responseAnnouncementList, HttpStatus.OK);
 
 	}
-
+	@GetMapping(value = "announcement/city={city}", produces = {MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementByCity(@PathVariable("city") String city){
+		List<AnnouncementDTO> responseAnnouncementList=new ArrayList<>();
+		List<AnnouncementEntity> announcementList = announcementService.getAnnouncementByCity(city);
+		for (AnnouncementEntity announcement : announcementList) {
+			AnnouncementDTO ae = new AnnouncementDTO();
+			BeanUtils.copyProperties(announcement, ae);
+			responseAnnouncementList.add(ae);
+		}
+		return new ResponseEntity<List<AnnouncementDTO>>(responseAnnouncementList, HttpStatus.OK);
+	}
 	// create new announcement
 	@PostMapping(value = "announcement", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Void> addAnnouncement(@RequestBody AnnouncementDTO announcementInfo,

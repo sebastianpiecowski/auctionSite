@@ -1,4 +1,4 @@
-/*package com.zai.projekt.Entity;
+package com.zai.projekt.Entity;
 
 import java.io.Serializable;
 
@@ -27,10 +27,11 @@ public class ImageEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "image_id")
 	private int imageId;
+	@Lob
 	@Column(name = "image")
 	private Blob image;
 	@ManyToOne
 	@JoinColumn(name = "announcement_id")
 	private AnnouncementEntity announcementId;
 
-}*/
+}

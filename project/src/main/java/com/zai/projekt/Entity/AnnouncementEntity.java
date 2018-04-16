@@ -45,5 +45,5 @@ public class AnnouncementEntity implements Serializable {
 	private Date endDate;
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	private CategoryEntity categoryName;
+	private CategoryEntity category;
 }

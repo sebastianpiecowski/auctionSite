@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zai.projekt.DTO.CategoryDTO;
 import com.zai.projekt.Entity.CategoryEntity;
 import com.zai.projekt.IService.ICategoryService;
-import DTO.CategoryDTO;
 
 @RestController
 // @RequestMapping("user")
@@ -44,5 +44,4 @@ public class CategoryController {
 		}
 		return new ResponseEntity<List<CategoryDTO>>(responseCategoryList, HttpStatus.OK);
 	}
-
 }

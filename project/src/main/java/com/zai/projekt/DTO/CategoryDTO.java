@@ -1,4 +1,4 @@
-package DTO;
+package com.zai.projekt.DTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -12,5 +12,5 @@ public class CategoryDTO {
 	@JsonInclude(Include.NON_NULL)
 	private int categoryId;
 	@JsonInclude(Include.NON_NULL)
-	private String name;
+	private String category;
 }

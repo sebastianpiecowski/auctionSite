@@ -1,18 +1,15 @@
 package com.zai.projekt.Entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Date;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +23,7 @@ public class CategoryEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "category_id")
 	private int categoryId;
-	@Column(name = "name")
+	@Column(name = "category")
 	private String name;
 
 }

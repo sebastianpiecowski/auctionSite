@@ -51,9 +51,15 @@ public class AnnouncementService implements IAnnouncementService{
 	}
 
 	@Override
-	public List<AnnouncementEntity> getAnnouncementByCategory(String category) {
+	public List<AnnouncementEntity> getAnnouncementByCategoryName(String category) {
 		List<AnnouncementEntity> list =new ArrayList<>();
 		announcementRepository.findByCategoryNameContaining(category).forEach(e->list.add(e));
+		return list;
+	}
+	@Override
+	public List<AnnouncementEntity> getAnnouncementByCity(String city) {
+		List<AnnouncementEntity> list=new ArrayList<>();
+		announcementRepository.findByUserCityContaining(city).forEach(e->list.add(e));
 		return list;
 	}
 
