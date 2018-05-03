@@ -24,7 +24,7 @@ public class AnnouncementDTO {
 	@JsonInclude(Include.NON_NULL)
 	private BigDecimal price;
 	@JsonInclude(Include.NON_NULL)
-	private UserEntity user;
+	private UserDTO user;
 	@JsonInclude(Include.NON_NULL)
 	private StatusEntity status;
 	@JsonInclude(Include.NON_NULL)
@@ -32,5 +32,5 @@ public class AnnouncementDTO {
 	@JsonInclude(Include.NON_NULL)
 	private Date endDate;
 	@JsonInclude(Include.NON_NULL)
-	private CategoryEntity category;
+	private CategoryDTO category;
 }

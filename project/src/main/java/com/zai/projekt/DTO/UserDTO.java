@@ -8,9 +8,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CategoryDTO {
-	@JsonInclude(Include.NON_NULL)
-	private int categoryId;
+public class UserDTO {
 	@JsonInclude(Include.NON_NULL)
 	private String name;
+	@JsonInclude(Include.NON_NULL)
+	private String surname;
+	@JsonInclude(Include.NON_NULL)
+	private String email;
+	@JsonInclude(Include.NON_NULL)
+	private String phoneNumber;
+	@JsonInclude(Include.NON_NULL)
+	private String city;
 }

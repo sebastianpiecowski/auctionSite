@@ -39,7 +39,12 @@
          <groupId>org.springframework.boot</groupId>
          <artifactId>spring-boot-devtools</artifactId>
          <optional>true</optional>
-      </dependency> 
+      </dependency>
+      <dependency>
+    	 <groupId>org.modelmapper</groupId>
+    	 <artifactId>modelmapper</artifactId>
+    	 <version>0.7.5</version>
+	  </dependency> 
       <dependency>
 		 <groupId>org.projectlombok</groupId>
 		 <artifactId>lombok</artifactId>

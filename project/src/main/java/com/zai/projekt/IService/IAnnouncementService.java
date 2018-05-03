@@ -2,17 +2,20 @@ package com.zai.projekt.IService;
 
 import java.util.List;
 
+import com.zai.projekt.DTO.AnnouncementDTO;
 import com.zai.projekt.Entity.AnnouncementEntity;
+import com.zai.projekt.Entity.UserEntity;
 
 public interface IAnnouncementService {
 
-		List<AnnouncementEntity> getAllAnnouncements();
-		List<AnnouncementEntity> getAnnouncementByTitle(String announcementTitle);
-		List<AnnouncementEntity> getAnnouncementByCategoryName(String category);
-		List<AnnouncementEntity> getAnnouncementByCity(String city);
-		
-		AnnouncementEntity getAnnouncementById(int announcementId);
+		List<AnnouncementDTO> getAllAnnouncements();
+		List<AnnouncementDTO> getAnnouncementByTitle(String announcementTitle);
+		List<AnnouncementDTO> getAnnouncementByCategoryName(String category);
+		List<AnnouncementDTO> getAnnouncementByCity(String city);
+		List<AnnouncementDTO> getAnnouncementByUserId(int id);
+		AnnouncementDTO getAnnouncementById(int announcementId);
 		boolean addAnnouncement(AnnouncementEntity announcement);
-		void updateAnnouncement(AnnouncementEntity announcement);
-		void deleteAnnouncement(int announcementId);
+		int updateAnnouncement(AnnouncementEntity announcement);
+		int deleteAnnouncement(int announcementId);
+		
 }
