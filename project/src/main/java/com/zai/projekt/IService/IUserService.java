@@ -1,7 +1,8 @@
 package com.zai.projekt.IService;
 
+import com.zai.projekt.DTO.UserDTO;
 import com.zai.projekt.Entity.UserEntity;
 
 public interface IUserService {
-	UserEntity getUserById(int id);
+	UserDTO getUserById(int id);
 }

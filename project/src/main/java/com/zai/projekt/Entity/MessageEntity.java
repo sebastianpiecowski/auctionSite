@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
-
+/*
 @Getter
 @Setter
 @Entity
@@ -22,18 +22,14 @@ import lombok.Setter;
 public class MessageEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@ManyToOne
-	@JoinColumn(name = "announcement_id")
+	@Column(name = "announcement_id")
 	private AnnouncementEntity announcement;
-	@OneToOne
-	@JoinColumn(name = "owner_id")
+	@Column(name = "owner_id")
 	private UserEntity owner;
-	@OneToOne
-	@JoinColumn(name = "client_id")
+	@Column(name = "client_id")
 	private UserEntity client;
 	@Column(name = "message_id")
 	private int messageId;
 	@Column(name = "message")
 	private String message;
-}
+}*/

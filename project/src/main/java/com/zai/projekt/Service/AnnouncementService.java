@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import com.zai.projekt.DTO.AnnouncementDTO;
@@ -21,6 +22,7 @@ import com.zai.projekt.Repository.CategoryRepository;
 import com.zai.projekt.Repository.StatusRepository;
 import com.zai.projekt.Repository.UserRepository;
 @Service
+@Transactional
 public class AnnouncementService implements IAnnouncementService{
 	@Autowired
 	private AnnouncementRepository announcementRepository;
@@ -47,7 +49,7 @@ public class AnnouncementService implements IAnnouncementService{
 	}
 
 	@Override
-	public synchronized boolean addAnnouncement(AnnouncementEntity announcement) {
+	public boolean addAnnouncement(AnnouncementEntity announcement) {
 		if(announcement.getCategory()==null) {
 			announcement.setCategory(categoryRepository.getOne(9));
 			announcement.setUser(userRepository.getOne(2));
@@ -76,7 +78,6 @@ public class AnnouncementService implements IAnnouncementService{
 		return list;
 	}
 	
-
 	@Override
 	public List<AnnouncementDTO> getAnnouncementByCategoryName(String category) {
 		List<AnnouncementDTO> list =new ArrayList<>();
@@ -89,10 +90,8 @@ public class AnnouncementService implements IAnnouncementService{
 		announcementRepository.findByUserCityContaining(city).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
 		return list;
 	}
-
 	@Override
-	public List<AnnouncementDTO> getAnnouncementByUserId(int id) {
-		
+	public List<AnnouncementDTO> getAnnouncementByUserId(int id) {		
 		List<AnnouncementDTO> list=new ArrayList<>();
 		announcementRepository.findByUserUserId(id).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
 		return list;
