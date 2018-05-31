@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,7 @@ import com.zai.projekt.Request.SignUp;
 public class UserController {
 	@Autowired
 	IUserService userService;
-
+	//@PreAuthorize("hasRole(user)")
 	@GetMapping(value = "id={id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<UserDTO>(userService.getUserById(id), HttpStatus.OK);
@@ -30,7 +31,7 @@ public class UserController {
 	}
 	@PostMapping(value = "login", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<UserDTO> login(@RequestBody Login login) {
-		UserDTO user = userService.getUserByEmailAndPassowrd(login.getEmail(), login.getPassword());
+		UserDTO user = userService.getUserByEmailAndPassword(login.getEmail(), login.getPassword());
 		return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
 	}
 	@PostMapping(value = "sign_up", produces = {MediaType.APPLICATION_JSON_VALUE})

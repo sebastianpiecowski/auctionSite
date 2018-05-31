@@ -15,11 +15,12 @@ import org.springframework.ui.ModelMap;
 import com.zai.projekt.DTO.AnnouncementDTO;
 import com.zai.projekt.DTO.UserDTO;
 import com.zai.projekt.Entity.AnnouncementEntity;
+import com.zai.projekt.Entity.CategoryEntity;
 import com.zai.projekt.Entity.UserEntity;
 import com.zai.projekt.IService.IAnnouncementService;
+import com.zai.projekt.Model.AnnouncementStatus;
 import com.zai.projekt.Repository.AnnouncementRepository;
 import com.zai.projekt.Repository.CategoryRepository;
-import com.zai.projekt.Repository.StatusRepository;
 import com.zai.projekt.Repository.UserRepository;
 @Service
 @Transactional
@@ -30,8 +31,6 @@ public class AnnouncementService implements IAnnouncementService{
 	private CategoryRepository categoryRepository;
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private StatusRepository statusRepository;
 
 	private ModelMapper modelMapper=new ModelMapper();
 	@Override
@@ -50,13 +49,17 @@ public class AnnouncementService implements IAnnouncementService{
 
 	@Override
 	public boolean addAnnouncement(AnnouncementEntity announcement) {
-		if(announcement.getCategory()==null) {
-			announcement.setCategory(categoryRepository.getOne(9));
-			announcement.setUser(userRepository.getOne(2));
-			announcement.setStatus(statusRepository.getOne(4));
+		
+		announcement.setStatus(AnnouncementStatus.LOBBY);
+		
+		if(announcementRepository.save(announcement) != null) {
+			return true;	
 		}
-		announcementRepository.save(announcement);
-		return true;
+		else
+		{
+			return false;
+		}
+		
 	}
 
 	@Override

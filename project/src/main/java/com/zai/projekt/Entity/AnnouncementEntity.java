@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.zai.projekt.Model.AnnouncementStatus;
+import com.zai.projekt.Model.UserRole;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -41,9 +46,9 @@ public class AnnouncementEntity implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private UserEntity user;
-	@ManyToOne
-	@JoinColumn(name = "status_id")
-	private StatusEntity status;
+	@Column(name="status")
+    @Enumerated(EnumType.STRING)
+	private AnnouncementStatus status;
 	@ManyToOne
 	@JoinColumn(name = "category_id")
 	private CategoryEntity category;

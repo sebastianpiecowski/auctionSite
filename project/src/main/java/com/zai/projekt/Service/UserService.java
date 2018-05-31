@@ -2,13 +2,14 @@ package com.zai.projekt.Service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zai.projekt.DTO.AnnouncementDTO;
 import com.zai.projekt.DTO.UserDTO;
 import com.zai.projekt.Entity.UserEntity;
 import com.zai.projekt.IService.IUserService;
+import com.zai.projekt.Model.UserRole;
 import com.zai.projekt.Repository.UserRepository;
 import com.zai.projekt.Request.SignUp;
 
@@ -18,8 +19,8 @@ public class UserService implements IUserService{
 	
 	@Autowired
 	private UserRepository userRepository;
-	//@Autowired
-	//private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	private ModelMapper modelMapper=new ModelMapper();
 	@Override
@@ -28,27 +29,27 @@ public class UserService implements IUserService{
 		return userDTO;
 	}
 	@Override
-	public UserDTO getUserByEmailAndPassowrd(String email, String password) {
-		return null;
-/*
+	public UserDTO getUserByEmailAndPassword(String email, String password) {
+
 		UserEntity user=userRepository.findByEmail(email);
 		if(passwordEncoder.matches(password, user.getPassword())) {
 			return modelMapper.map(user, UserDTO.class);
 		}
 		else {
 			return null;
-		}*/
+		}
 	}
 	@Override
 	public boolean addUser(SignUp newUser) {
 		if(userRepository.findByEmail(newUser.getEmail())==null) {
 			UserEntity user=new UserEntity();
 			user.setEmail(newUser.getEmail());
-			user.setPassword(newUser.getPassword());
+			user.setPassword(passwordEncoder.encode(newUser.getPassword()));
 			user.setName(newUser.getName());
 			user.setSurname(newUser.getSurname());
 			user.setPhoneNumber(newUser.getPhoneNumber());
 			user.setCity(newUser.getCity());
+			user.setRole(UserRole.USER);
 			userRepository.save(user);
 			return true;
 		}

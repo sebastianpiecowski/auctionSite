@@ -16,15 +16,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.google.common.net.HttpHeaders;
 import com.zai.projekt.DTO.AnnouncementDTO;
+import com.zai.projekt.Entity.AnnouncementEntity;
 import com.zai.projekt.IService.IAnnouncementService;
+import com.zai.projekt.IService.IUserService;
+import com.zai.projekt.Repository.CategoryRepository;
+import com.zai.projekt.Repository.UserRepository;
+import com.zai.projekt.Request.Announcement;
 
 @RestController
 @RequestMapping(value = "announcement")
 public class AnnouncementController {
 	@Autowired
 	private IAnnouncementService announcementService;
-
+	@Autowired 
+	private UserRepository userRepository;
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
 	// fetch announcement by id
 	@GetMapping(value = "id={id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<AnnouncementDTO> getAnnouncementById(@PathVariable("id") Integer id) {
@@ -61,19 +71,24 @@ public class AnnouncementController {
 	}
 	// create new announcement
 	@PostMapping(value = "add", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Void> addAnnouncement(@RequestBody AnnouncementDTO announcementInfo,
+	public ResponseEntity<Void> addAnnouncement(@RequestBody Announcement announcementInfo,
 			UriComponentsBuilder builder) {
-				return null;
-		/*AnnouncementEntity announcement = new AnnouncementEntity();
-		BeanUtils.copyProperties(announcementInfo, announcement);
-		boolean flag = announcementService.addAnnouncement(announcementInfo);
+		
+		
+		AnnouncementEntity announcement = new AnnouncementEntity();
+		announcement.setTitle(announcementInfo.getTitle());
+		announcement.setDescription(announcementInfo.getDescription());
+		announcement.setPrice(announcementInfo.getPrice());
+		announcement.setStartDate(announcementInfo.getStartDate());
+		announcement.setEndDate(announcementInfo.getEndDate());
+		announcement.setUser(userRepository.findById(announcementInfo.getUserId()));
+		announcement.setCategory(categoryRepository.findById(announcementInfo.getCategoryId()));
+		boolean flag = announcementService.addAnnouncement(announcement);
 		if (flag == false) {
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(
-				builder.path("/announcement/{id}").buildAndExpand(announcementInfo.getId()).toUri());
-		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);*/
+		
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
 	@DeleteMapping(value = "id={id}", produces = { MediaType.APPLICATION_JSON_VALUE })

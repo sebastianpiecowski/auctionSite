@@ -6,8 +6,8 @@ import java.sql.Date;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.zai.projekt.Entity.CategoryEntity;
-import com.zai.projekt.Entity.StatusEntity;
 import com.zai.projekt.Entity.UserEntity;
+import com.zai.projekt.Model.AnnouncementStatus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +15,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AnnouncementDTO {
-	@JsonInclude(Include.NON_NULL)
-	private int announcementId;
 	@JsonInclude(Include.NON_NULL)
 	private String title;
 	@JsonInclude(Include.NON_NULL)
@@ -26,11 +24,11 @@ public class AnnouncementDTO {
 	@JsonInclude(Include.NON_NULL)
 	private UserDTO user;
 	@JsonInclude(Include.NON_NULL)
-	private StatusEntity status;
+	private AnnouncementStatus status;
 	@JsonInclude(Include.NON_NULL)
 	private Date startDate;
 	@JsonInclude(Include.NON_NULL)
 	private Date endDate;
 	@JsonInclude(Include.NON_NULL)
-	private CategoryDTO category;
+	private String categoryName;
 }
