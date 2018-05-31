@@ -15,6 +15,5 @@ public class Announcement {
 	private BigDecimal price;
 	private Date startDate;
 	private Date endDate;
-	private int userId;
 	private int categoryId;
 }

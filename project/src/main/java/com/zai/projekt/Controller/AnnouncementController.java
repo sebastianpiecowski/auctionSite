@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,17 +20,21 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.google.common.net.HttpHeaders;
 import com.zai.projekt.DTO.AnnouncementDTO;
 import com.zai.projekt.Entity.AnnouncementEntity;
+import com.zai.projekt.Entity.UserEntity;
 import com.zai.projekt.IService.IAnnouncementService;
 import com.zai.projekt.IService.IUserService;
 import com.zai.projekt.Repository.CategoryRepository;
 import com.zai.projekt.Repository.UserRepository;
 import com.zai.projekt.Request.Announcement;
+import com.zai.projekt.Service.UserService;
 
 @RestController
 @RequestMapping(value = "announcement")
 public class AnnouncementController {
 	@Autowired
 	private IAnnouncementService announcementService;
+	@Autowired
+	private UserService userService;
 	@Autowired 
 	private UserRepository userRepository;
 	@Autowired
@@ -81,7 +86,8 @@ public class AnnouncementController {
 		announcement.setPrice(announcementInfo.getPrice());
 		announcement.setStartDate(announcementInfo.getStartDate());
 		announcement.setEndDate(announcementInfo.getEndDate());
-		announcement.setUser(userRepository.findById(announcementInfo.getUserId()));
+		
+		announcement.setUser(userRepository.findByEmail(userService.getLoggedUser()));
 		announcement.setCategory(categoryRepository.findById(announcementInfo.getCategoryId()));
 		boolean flag = announcementService.addAnnouncement(announcement);
 		if (flag == false) {

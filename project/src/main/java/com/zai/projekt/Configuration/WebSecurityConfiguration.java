@@ -14,9 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
-	
-	@Autowired
-	private AuthenticationEntryPoint authEntryPoint;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -32,8 +30,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
             "/webjars/**",
             "/announcement/all",
             "/user/sign_up",
-            "/user/login/",
-            "/user/id*",
+            "/user/login",
             "/announcement/category_id*",
             "/announcement/user*"
     };
@@ -50,15 +47,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers("/**/*").authenticated()
+                .antMatchers("/**/**").authenticated()
                 .and()
                 .httpBasic()
                 .and()
                 .csrf().disable();
-//    	http.csrf().disable().authorizeRequests()
-//		.anyRequest().authenticated()
-//		.and().httpBasic()
-//		.authenticationEntryPoint(authEntryPoint);
     }
     
 }

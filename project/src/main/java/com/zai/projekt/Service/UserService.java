@@ -2,6 +2,9 @@ package com.zai.projekt.Service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ public class UserService implements IUserService{
 	private PasswordEncoder passwordEncoder;
 	
 	private ModelMapper modelMapper=new ModelMapper();
+	@PreAuthorize("hasRole(USER)")
 	@Override
 	public UserDTO getUserById(int id) {
 		UserDTO userDTO=modelMapper.map(userRepository.getOne(id), UserDTO.class);
@@ -56,6 +60,12 @@ public class UserService implements IUserService{
 		else {
 			return false;
 		}
+	}
+	public String getLoggedUser() {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+		String email = user.getUsername();
+		return email;
 	}
 	
 }
