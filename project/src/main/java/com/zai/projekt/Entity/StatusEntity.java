@@ -20,8 +20,8 @@ public class StatusEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "status_id")
-	private int statusId;
-	@Column(name = "status")
+	@Column(name = "id")
+	private int id;
+	@Column(name = "status_name")
 	private String status;
 }

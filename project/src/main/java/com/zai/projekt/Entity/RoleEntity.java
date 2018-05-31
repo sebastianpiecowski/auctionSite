@@ -20,8 +20,8 @@ public class RoleEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "role_id")
-	private int roleId;
+	@Column(name = "id")
+	private int id;
 	@Column(name = "role")
 	private String role;
 }

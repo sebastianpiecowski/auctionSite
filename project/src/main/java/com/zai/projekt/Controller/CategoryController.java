@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zai.projekt.DTO.CategoryDTO;
@@ -18,14 +19,13 @@ import com.zai.projekt.Entity.CategoryEntity;
 import com.zai.projekt.IService.ICategoryService;
 
 @RestController
-// @RequestMapping("user")
-@CrossOrigin(origins = { "http://localhost:4200" })
+@RequestMapping(value = "category")
 public class CategoryController {
 	@Autowired
 	private ICategoryService categoryService;
 
 	// fetch category by id
-	@GetMapping(value = "category/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "id={id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable("id") Integer id) {
 		CategoryDTO ct = new CategoryDTO();
 		BeanUtils.copyProperties(categoryService.getCategoryById(id), ct);
@@ -33,7 +33,7 @@ public class CategoryController {
 	}
 
 	// fetch all categories
-	@GetMapping(value = "categories", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "all", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<List<CategoryDTO>> getAllCategories() {
 		List<CategoryDTO> responseCategoryList = new ArrayList<>();
 		List<CategoryEntity> categoryList = categoryService.getAllCategories();

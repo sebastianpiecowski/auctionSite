@@ -93,7 +93,14 @@ public class AnnouncementService implements IAnnouncementService{
 	@Override
 	public List<AnnouncementDTO> getAnnouncementByUserId(int id) {		
 		List<AnnouncementDTO> list=new ArrayList<>();
-		announcementRepository.findByUserUserId(id).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
+		announcementRepository.findByUserId(id).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
+		return list;
+	}
+
+	@Override
+	public List<AnnouncementDTO> getAnnouncementByCategoryId(int id) {
+		List<AnnouncementDTO> list=new ArrayList<>();
+		announcementRepository.findByCategoryId(id).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
 		return list;
 	}
 

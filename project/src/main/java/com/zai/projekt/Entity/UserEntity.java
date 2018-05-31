@@ -11,19 +11,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name = "user")
-public class UserEntity implements Serializable {
+public class UserEntity implements Serializable{
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "user_id")
-	private int userId;
+	@Column(name = "id")
+	private int id;
 	@Column(name = "email")
 	private String email;
 	@Column(name = "password")
@@ -39,5 +38,4 @@ public class UserEntity implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "role")
 	private RoleEntity role;
-
 }

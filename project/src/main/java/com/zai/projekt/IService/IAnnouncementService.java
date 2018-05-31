@@ -13,6 +13,7 @@ public interface IAnnouncementService {
 		List<AnnouncementDTO> getAnnouncementByCategoryName(String category);
 		List<AnnouncementDTO> getAnnouncementByCity(String city);
 		List<AnnouncementDTO> getAnnouncementByUserId(int id);
+		List<AnnouncementDTO> getAnnouncementByCategoryId(int id);
 		AnnouncementDTO getAnnouncementById(int announcementId);
 		boolean addAnnouncement(AnnouncementEntity announcement);
 		int updateAnnouncement(AnnouncementEntity announcement);
