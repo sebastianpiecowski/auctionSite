@@ -29,7 +29,7 @@ CREATE TABLE `announcement` (
 
 CREATE TABLE `image` (
 	`id` INT NOT NULL AUTO_INCREMENT,
-	`image` blob(1024) NOT NULL,
+	`image` MEDIUMTEXT NOT NULL,
 	`announcement_id` INT NOT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -61,4 +61,4 @@ ALTER TABLE `message` ADD CONSTRAINT `message_fk1` FOREIGN KEY (`owner_id`) REFE
 
 ALTER TABLE `message` ADD CONSTRAINT `message_fk2` FOREIGN KEY (`client_id`) REFERENCES `user`(`id`);
 
-
+INSERT INTO category VALUES ("Electronics", "Automotive", "Fashion",  "House & Garden", "Sport", "Music", "Education", "Real estate", "Kids", "Pets");

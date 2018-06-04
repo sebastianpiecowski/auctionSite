@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="style_index.css" type="text/css">
+  <meta http-equiv="X-UA-Compatible" content="IE"=edge,chrome="1&quot;/">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css" type="text/css">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+  <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script> 
+  
+
+ <script>
+function UserAction() {
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://localhost:8080/announcement/category_id=1", false);
+	xhr.send();
+    alert(xhr.response);
+}
+</script>
+		
+
+  <style type="text/css">
+    h3 {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .suggestionsBox {
+      position: relative;
+      left: 80px;
+      margin: 10px 0px 0px px;
+      width: 400px;
+      background-color: #009900;
+      -moz-border-radius: 7px;
+      -webkit-border-radius: 7px;
+      border: 2px solid #fff;
+      color: #fff;
+    }
+
+    .suggestionList {
+      margin: 5px;
+      padding: 0px;
+    }
+
+    .suggestionList li {
+      margin: 0px 0px 3px 0px;
+      padding: 3px;
+      cursor: pointer;
+    }
+
+    .suggestionList li:hover {
+      background-color: #137f13;
+    }
+  </style>
+</head>
+
+<body>
+<!--<button type="submit" onclick="UserAction()">Search</button>-->
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="landing.php">
+        <img src="logo3.png" height="60px" width="200px"> </a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar3SupportedContent" aria-controls="navbar3SupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse text-center justify-content-center" id="navbar3SupportedContent">
+        <a class="btn navbar-btn ml-2 text-white btn-primary ml-auto" href="add.html" style="float: right;">
+          <i class="fa d-inline fa-lg fa-plus-circle"></i>Add announcement</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" href="#">
+          <i class="fa d-inline fa-lg fa-inbox"></i>Announcements</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" href="#">
+          <i class="fa d-inline fa-lg fa-cogs"></i>Settings</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" href="#">
+          <i class="fa d-inline fa-lg fa-address-book"></i>Contact</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" href="login.html">
+          <i class="fa d-inline fa-lg fa-user-circle"></i>Sign in</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" href="#">
+          <i class="fa d-inline fa-lg fa-user-circle"></i> Sign out</a>
+      </div>
+    </div>
+  </nav>
+  <div class="p-2">
+    <div class="container">
+      <div class="row"> </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9 w-100">
+          <form class="form-inline">
+            <input type="text" class="form-control w-100" id="inlineFormInput" placeholder="Type what you looking for"> </form>
+        </div>
+        <div class="col-md-2">
+          <div class="btn-group">
+            <button class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown"> Category </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#">Category1</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Category2</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <a class="btn btn-primary" href="#">Button </a>
+        </div>
+      </div>
+      <div class="row py-5">
+        <div class="col-md-2 offset-md-2" >
+          <div class="row">
+            <div class="col-4 col-md-12">
+			
+              <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+					<a onclick="getByCategory(1)" class="nav-link" data-toggle="pill" data-target="#tabone">Electronics</a>
+					<a onclick="getByCategory(2)" class="nav-link" data-toggle="pill" data-target="#tabone">Automotive</a>
+					<a onclick="getByCategory(3)" class="nav-link" data-toggle="pill" data-target="#tabone">Fashion</a>
+					<a onclick="getByCategory(4)" class="nav-link" data-toggle="pill" data-target="#tabone">House & Garden</a>
+					<a onclick="getByCategory(5)" class="nav-link" data-toggle="pill" data-target="#tabone">Sport</a>
+					<a onclick="getByCategory(6)" class="nav-link" data-toggle="pill" data-target="#tabone">Music</a>
+					<a onclick="getByCategory(7)" class="nav-link" data-toggle="pill" data-target="#tabone">Education</a>
+					<a onclick="getByCategory(8)" class="nav-link" data-toggle="pill" data-target="#tabone">Real estate</a>
+					<a onclick="getByCategory(9)" class="nav-link" data-toggle="pill" data-target="#tabone">Kids</a>
+					<a onclick="getByCategory(10)" class="nav-link" data-toggle="pill" data-target="#tabone">Pets</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-10">
+		    <div class="row" id="announcement">
+			
+		    </div>
+			
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12"> </div>
+      </div>
+    </div>
+  </div>
+  	
+			<script>
+            const categoryURL = 'http://localhost:8080/announcement/category_id=';
+            const $list = $('#announcement');
+			
+            function getByCategory(id) {
+				$("#announcement").empty();
+                $.ajax({
+                    url : categoryURL + id
+                }).done(ret => {
+                    ret.forEach(announcement => {
+						var startDate=$.datepicker.formatDate('yy-mm-dd', new Date(announcement.startDate));
+						var endDate=$.datepicker.formatDate('yy-mm-dd', new Date(announcement.endDate));
+                        const $element = $(`
+						<div class="col-md-4 py-2" id="announcement_element">
+						  <div class="card">
+							<img class="card-img-top" src="logo3.png" alt="Card image cap">
+							<div class="card-body">
+							  <h5 class="card-title">${announcement.title}</h5>
+							  <p class="card-text">Price :${announcement.price}</p>
+							  <p class="card-text">Validity `+startDate+` to `+endDate+`</p>
+							  <a href="#" class="btn btn-primary">More</a>
+							</div>
+						  </div>
+						</div>
+						`);
+                        $list.append($element);
+                    });
+                });
+            }
+			
+        </script>
+		
+		
+		
+		
+</body>
+
+</html>

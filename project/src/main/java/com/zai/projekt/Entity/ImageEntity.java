@@ -12,13 +12,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.mysql.jdbc.Blob;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+
+@Data
 @Entity
 @Table(name = "image")
 public class ImageEntity implements Serializable {
@@ -29,7 +27,7 @@ public class ImageEntity implements Serializable {
 	private int id;
 	@Lob
 	@Column(name = "image")
-	private Blob image;
+	private String image;
 	@ManyToOne
 	@JoinColumn(name = "announcement_id")
 	private AnnouncementEntity announcementId;

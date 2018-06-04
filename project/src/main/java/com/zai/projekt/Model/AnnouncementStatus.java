@@ -1,5 +1,5 @@
 package com.zai.projekt.Model;
 
 public enum AnnouncementStatus {
-	LOBBY, ACTIVE, OLD
+	NEW, ACTIVE, CLOSED, BLOCKED
 }

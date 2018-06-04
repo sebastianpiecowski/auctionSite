@@ -7,5 +7,6 @@ import com.zai.projekt.Request.SignUp;
 public interface IUserService {
 	UserDTO getUserById(int id);
 	UserDTO getUserByEmailAndPassword(String email, String password);
+	UserDTO getLoggedUser();
 	boolean addUser(SignUp user);
 }

@@ -1,10 +1,9 @@
 package com.zai.projekt.Service;
 
-import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,19 +24,16 @@ public class UserService implements IUserService{
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	private ModelMapper modelMapper=new ModelMapper();
-	@PreAuthorize("hasRole(USER)")
 	@Override
 	public UserDTO getUserById(int id) {
-		UserDTO userDTO=modelMapper.map(userRepository.getOne(id), UserDTO.class);
-		return userDTO;
+		return new UserDTO(userRepository.getOne(id));
 	}
 	@Override
 	public UserDTO getUserByEmailAndPassword(String email, String password) {
 
 		UserEntity user=userRepository.findByEmail(email);
 		if(passwordEncoder.matches(password, user.getPassword())) {
-			return modelMapper.map(user, UserDTO.class);
+			return new UserDTO(user);
 		}
 		else {
 			return null;
@@ -61,11 +57,11 @@ public class UserService implements IUserService{
 			return false;
 		}
 	}
-	public String getLoggedUser() {
-		User user = (User) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-		String email = user.getUsername();
-		return email;
+	@Override
+	public UserDTO getLoggedUser() {
+		Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        UserDTO user=new UserDTO(userRepository.findByEmail(auth.getName()));
+		return user;
 	}
 	
 }

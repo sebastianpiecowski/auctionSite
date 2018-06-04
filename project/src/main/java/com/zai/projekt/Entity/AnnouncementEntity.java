@@ -2,8 +2,9 @@ package com.zai.projekt.Entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
+
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,11 +21,10 @@ import javax.persistence.Table;
 import com.zai.projekt.Model.AnnouncementStatus;
 import com.zai.projekt.Model.UserRole;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+
+@Data
 @Entity
 @Table(name = "announcement")
 public class AnnouncementEntity implements Serializable {

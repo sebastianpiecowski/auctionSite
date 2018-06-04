@@ -1,58 +1,75 @@
 package com.zai.projekt.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
+
 
 import com.zai.projekt.DTO.AnnouncementDTO;
-import com.zai.projekt.DTO.UserDTO;
 import com.zai.projekt.Entity.AnnouncementEntity;
-import com.zai.projekt.Entity.CategoryEntity;
-import com.zai.projekt.Entity.UserEntity;
+import com.zai.projekt.Entity.ImageEntity;
 import com.zai.projekt.IService.IAnnouncementService;
 import com.zai.projekt.Model.AnnouncementStatus;
 import com.zai.projekt.Repository.AnnouncementRepository;
 import com.zai.projekt.Repository.CategoryRepository;
+import com.zai.projekt.Repository.ImageRepository;
 import com.zai.projekt.Repository.UserRepository;
+import com.zai.projekt.Request.Announcement;
 @Service
 @Transactional
 public class AnnouncementService implements IAnnouncementService{
 	@Autowired
 	private AnnouncementRepository announcementRepository;
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private ImageRepository imageRepository;
 	@Autowired
 	private UserRepository userRepository;
-
-	private ModelMapper modelMapper=new ModelMapper();
-	@Override
-	public List<AnnouncementDTO> getAllAnnouncements() {
-		List<AnnouncementDTO> list= new ArrayList<>();
-		announcementRepository.findAll().forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
-		return list;
-	}
-
+	@Autowired
+	private CategoryRepository categoryRepository;
+	
 	@Override
 	public AnnouncementDTO getAnnouncementById(int announcementId) {
-		AnnouncementEntity obj=announcementRepository.findById(announcementId).get();
-		AnnouncementDTO ae=modelMapper.map(obj, AnnouncementDTO.class);
+		AnnouncementEntity announcement=announcementRepository.findById(announcementId).get();
+		List<ImageEntity> images=imageRepository.findByAnnouncementIdId(announcementId);
+		AnnouncementDTO ae=new AnnouncementDTO(announcement, images);
 		return ae;
 	}
 
 	@Override
-	public boolean addAnnouncement(AnnouncementEntity announcement) {
+	public boolean addAnnouncement(Announcement announcement) {
+		AnnouncementEntity newAnnouncement=new AnnouncementEntity();
+		newAnnouncement.setTitle(announcement.getTitle());
+		newAnnouncement.setDescription(announcement.getDescription());
+		newAnnouncement.setPrice(announcement.getPrice());
+		newAnnouncement.setStatus(AnnouncementStatus.NEW);
+		newAnnouncement.setCategory(categoryRepository.findById(announcement.getCategoryId()));
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		newAnnouncement.setUser(userRepository.findByEmail(authentication.getName()));
+		Date startDate=new Date();
+		Date endDate=new Date();
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(endDate); 
+		c.add(Calendar.DATE, announcement.getDayUpTime());
+		endDate = c.getTime();
 		
-		announcement.setStatus(AnnouncementStatus.LOBBY);
-		
-		if(announcementRepository.save(announcement) != null) {
+		newAnnouncement.setStartDate(startDate);
+		newAnnouncement.setEndDate(endDate);
+		final AnnouncementEntity addedAnnouncement=announcementRepository.save(newAnnouncement);
+		if(addedAnnouncement != null) {			
+			announcement.getImages().forEach(e-> {
+				ImageEntity image=new ImageEntity();
+				image.setImage(e);
+				image.setAnnouncementId(addedAnnouncement);
+				imageRepository.save(image);
+			});		
 			return true;	
 		}
 		else
@@ -63,48 +80,95 @@ public class AnnouncementService implements IAnnouncementService{
 	}
 
 	@Override
-	public int updateAnnouncement(AnnouncementEntity announcement) {
-		
-		return 0;
+	public void updateAnnouncement(int id, Announcement updatedAnnouncement) {
+		AnnouncementEntity announcement=announcementRepository.findById(id).get();
+		announcement.setTitle(updatedAnnouncement.getTitle());
+		announcement.setDescription(updatedAnnouncement.getDescription());
+		announcement.setPrice(updatedAnnouncement.getPrice());
+		announcement.setCategory(categoryRepository.findById(updatedAnnouncement.getCategoryId()));
 	}
 
 	@Override
-	public int deleteAnnouncement(int announcementId) {
-		//announcementRepository.delete(getAnnouncementById(announcementId));
-		return 0;
+	public void deleteAnnouncement(int announcementId) {
+		announcementRepository.deleteById(announcementId);
 	}
 
 	@Override
-	public List<AnnouncementDTO> getAnnouncementByTitle(String announcementTitle) {
+	public List<AnnouncementDTO> getAnnouncementBySearch(String announcementTitle) {
 		List<AnnouncementDTO> list =new ArrayList<>();
-		announcementRepository.findByTitleContaining(announcementTitle).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
+		List<AnnouncementEntity> announcements=announcementRepository.findByTitleContainingIgnoreCaseAndStatus(announcementTitle, AnnouncementStatus.ACTIVE);
+		announcements.forEach(e -> {
+			List<ImageEntity> images = imageRepository.findByAnnouncementIdId(e.getId());
+			list.add(new AnnouncementDTO(e, images));
+		});
 		return list;
 	}
 	
 	@Override
-	public List<AnnouncementDTO> getAnnouncementByCategoryName(String category) {
+	public List<AnnouncementDTO> getAnnouncementByCategoryId(int id) {
 		List<AnnouncementDTO> list =new ArrayList<>();
-		announcementRepository.findByCategoryNameContaining(category).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
+		List<AnnouncementEntity> announcements=announcementRepository.findByCategoryIdAndStatus(id, AnnouncementStatus.ACTIVE);
+		announcements.forEach(e -> {
+			List<ImageEntity> images = imageRepository.findByAnnouncementIdId(e.getId());
+			list.add(new AnnouncementDTO(e, images));
+		});
 		return list;
 	}
 	@Override
-	public List<AnnouncementDTO> getAnnouncementByCity(String city) {
+	public List<AnnouncementDTO> getAnnouncementByCategoryAndSearch(int id, String search) {
 		List<AnnouncementDTO> list=new ArrayList<>();
-		announcementRepository.findByUserCityContaining(city).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
+		List<AnnouncementEntity> announcements=announcementRepository.findByTitleContainingIgnoreCaseAndCategoryIdAndStatus(search, id, AnnouncementStatus.ACTIVE);
+		announcements.forEach(e -> {
+			List<ImageEntity> images = imageRepository.findByAnnouncementIdId(e.getId());
+			list.add(new AnnouncementDTO(e, images));
+		});
 		return list;
 	}
 	@Override
-	public List<AnnouncementDTO> getAnnouncementByUserId(int id) {		
+	public List<AnnouncementDTO> getAnnouncementsByUserAuth() {		
 		List<AnnouncementDTO> list=new ArrayList<>();
-		announcementRepository.findByUserId(id).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		List<AnnouncementEntity> announcements=announcementRepository.findByUserEmail(authentication.getName());
+		announcements.forEach(e -> {
+			List<ImageEntity> images = imageRepository.findByAnnouncementIdId(e.getId());
+			list.add(new AnnouncementDTO(e, images));
+		});
 		return list;
+
 	}
 
 	@Override
-	public List<AnnouncementDTO> getAnnouncementByCategoryId(int id) {
+	public List<AnnouncementDTO> getNewAnnouncement() {
 		List<AnnouncementDTO> list=new ArrayList<>();
-		announcementRepository.findByCategoryId(id).forEach(e->list.add(modelMapper.map(e, AnnouncementDTO.class)));
+		List<AnnouncementEntity> announcements=announcementRepository.findByStatus(AnnouncementStatus.NEW);
+		announcements.forEach(e -> {
+			List<ImageEntity> images = imageRepository.findByAnnouncementIdId(e.getId());
+			list.add(new AnnouncementDTO(e, images));
+		});
 		return list;
+		
+	}
+
+	@Override
+	public void confirmAnnouncement(int id) {
+		 	AnnouncementEntity announcement = announcementRepository.findById(id).get();
+	        announcement.setStatus(AnnouncementStatus.ACTIVE);
+	        announcementRepository.save(announcement);	
+	}
+
+	@Override
+	public void closeAnnouncement(int id) {
+		AnnouncementEntity announcement = announcementRepository.findById(id).get();
+        announcement.setStatus(AnnouncementStatus.CLOSED);
+        announcementRepository.save(announcement);	
+	}
+
+	@Override
+	public void blockAnnouncement(int id) {
+		AnnouncementEntity announcement = announcementRepository.findById(id).get();
+        announcement.setStatus(AnnouncementStatus.BLOCKED);
+        announcementRepository.save(announcement);	
+		
 	}
 
 }
