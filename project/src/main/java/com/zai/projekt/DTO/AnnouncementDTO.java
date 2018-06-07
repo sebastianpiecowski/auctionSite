@@ -34,6 +34,10 @@ public class AnnouncementDTO {
 	private Date endDate;
 	@JsonInclude(Include.NON_NULL)
 	private List<String> images = new ArrayList<>();
+	@JsonInclude(Include.NON_NULL)
+	private String status;
+	@JsonInclude(Include.NON_NULL)
+	private int categoryId;
 	public AnnouncementDTO(AnnouncementEntity announcement, List<ImageEntity> images) {
 		id=announcement.getId();
 		title=announcement.getTitle();
@@ -47,7 +51,8 @@ public class AnnouncementDTO {
 			endDate=announcement.getEndDate();
 			e.printStackTrace();
 		}
-		
+		status=announcement.getStatus().toString();
+		categoryId=announcement.getCategory().getId();
 		images.forEach(e -> this.images.add(e.getImage()));
 		user=new UserDTO(announcement.getUser());
 	}

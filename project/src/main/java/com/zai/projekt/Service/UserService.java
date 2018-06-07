@@ -1,6 +1,8 @@
 package com.zai.projekt.Service;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,7 +42,7 @@ public class UserService implements IUserService{
 		}
 	}
 	@Override
-	public boolean addUser(SignUp newUser) {
+	public UserDTO addUser(SignUp newUser) {
 		if(userRepository.findByEmail(newUser.getEmail())==null) {
 			UserEntity user=new UserEntity();
 			user.setEmail(newUser.getEmail());
@@ -51,16 +53,21 @@ public class UserService implements IUserService{
 			user.setCity(newUser.getCity());
 			user.setRole(UserRole.USER);
 			userRepository.save(user);
-			return true;
+			return new UserDTO(user);
 		}
 		else {
-			return false;
+			return null;
 		}
 	}
 	@Override
 	public UserDTO getLoggedUser() {
 		Authentication auth= SecurityContextHolder.getContext().getAuthentication();
         UserDTO user=new UserDTO(userRepository.findByEmail(auth.getName()));
+		return user;
+	}
+	@Override
+	public UserDTO getUserByEmail(String email) {
+		UserDTO user = new UserDTO(userRepository.findByEmail(email));
 		return user;
 	}
 	

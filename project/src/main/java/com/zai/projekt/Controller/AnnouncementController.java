@@ -35,55 +35,64 @@ public class AnnouncementController {
 	@Autowired
 	private IAnnouncementService announcementService;
 	
+	@GetMapping("/all")
+	public ResponseEntity<List<AnnouncementDTO>> getAllAnnouncement(){
+		return new ResponseEntity<List<AnnouncementDTO>>(announcementService.getAllAnnoucements(), HttpStatus.OK);
+	}
 	// fetch announcement by id
-	@GetMapping(value = "id={id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping("/id={id}")
 	public ResponseEntity<AnnouncementDTO> getAnnouncementById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<AnnouncementDTO>(announcementService.getAnnouncementById(id), HttpStatus.OK);
 	}
-	@GetMapping(value = "category_id={id}&search={search}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<AnnouncementDTO> getAnnouncementByCategoryIdAndSearch(@PathVariable("id") Integer id, @PathVariable("search") String search) {
-		return new ResponseEntity<AnnouncementDTO>(announcementService.getAnnouncementById(id), HttpStatus.OK);
+	@GetMapping("/category_id={id}/search={title}")
+	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementByCategoryIdAndSearch(@PathVariable("id") int id, @PathVariable("title") String search) {
+		System.out.println("ID:"+id+ " search: "+search);
+		return new ResponseEntity<List<AnnouncementDTO>>(announcementService.getAnnouncementByCategoryAndSearch(id, search), HttpStatus.OK);
 	}
-	@GetMapping(value = "search={search}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping("/search={search}")
 	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementBySearch(@PathVariable("search") String search) {
 		return new ResponseEntity<List<AnnouncementDTO>>(announcementService.getAnnouncementBySearch(search), HttpStatus.OK);
 	}
 
-	@GetMapping(value = "category_id={id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping("/category_id={id}")
 	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementByCategoryId(@PathVariable("id") int category) {
 		return new ResponseEntity<List<AnnouncementDTO>>(announcementService.getAnnouncementByCategoryId(category), HttpStatus.OK);
 	}
-	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-	@GetMapping(value = "user/my", produces = {MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementsByUserAuth(@PathVariable("id") int id){
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+	@GetMapping("/user/my")
+	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementsByUserAuth(){
 		return new ResponseEntity<List<AnnouncementDTO>>(announcementService.getAnnouncementsByUserAuth(), HttpStatus.OK);
 	}
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@GetMapping("/new")
+	public ResponseEntity<List<AnnouncementDTO>> getAnnouncementsWithNewStatus() {
+		return new ResponseEntity<List<AnnouncementDTO>>(announcementService.getNewAnnouncement(), HttpStatus.OK);
+	}
 	//confirm
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	@PostMapping(value = "confirm", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PostMapping("/confirm")
 	public ResponseEntity<Void> confirmAnnouncement(@RequestBody Integer id) {
 		announcementService.confirmAnnouncement(id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	//close
-	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-	@PostMapping(value = "close", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+	@PostMapping("/close")
 	public ResponseEntity<Void> closeAnnouncement(@RequestBody Integer id) {
 		announcementService.closeAnnouncement(id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	//confirm
-		@PreAuthorize("hasAnyRole('ADMIN')")
-		@PostMapping(value = "block", produces = { MediaType.APPLICATION_JSON_VALUE })
-		public ResponseEntity<Void> blockAnnouncement(@RequestBody Integer id) {
-			announcementService.blockAnnouncement(id);
-			return new ResponseEntity<Void>(HttpStatus.OK);
-		}
+	//block
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PostMapping("/block")
+	public ResponseEntity<Void> blockAnnouncement(@RequestBody Integer id) {
+		announcementService.blockAnnouncement(id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 	// create new announcement
-	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-	@PostMapping(value = "add", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Void> addAnnouncement(@RequestBody Announcement announcementInfo,
-			UriComponentsBuilder builder) {
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+	@PostMapping("/add")
+	public ResponseEntity<Void> addAnnouncement(@RequestBody Announcement announcementInfo) {
 		
 		boolean flag = announcementService.addAnnouncement(announcementInfo);
 		if (flag == false) {
@@ -92,9 +101,22 @@ public class AnnouncementController {
 		
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+	@PostMapping("/update/id={id}")
+	public ResponseEntity<Void> updateAnnouncement(@PathVariable("id") Integer id, @RequestBody Announcement announcementInfo) {
+		try {
+		announcementService.updateAnnouncement(id, announcementInfo);
+		
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		}catch(Exception e)
+		
+		{
+			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+		}
+	}
 	
-	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-	@DeleteMapping(value = "id={id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+	@DeleteMapping("/id={id}")
 	public ResponseEntity<Void> deleteAnnouncement(@PathVariable("id") Integer id) {
 		announcementService.deleteAnnouncement(id);
 		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

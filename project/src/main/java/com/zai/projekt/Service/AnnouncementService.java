@@ -86,6 +86,8 @@ public class AnnouncementService implements IAnnouncementService{
 		announcement.setDescription(updatedAnnouncement.getDescription());
 		announcement.setPrice(updatedAnnouncement.getPrice());
 		announcement.setCategory(categoryRepository.findById(updatedAnnouncement.getCategoryId()));
+		announcement.setStatus(AnnouncementStatus.NEW);
+		announcementRepository.save(announcement);
 	}
 
 	@Override
@@ -168,7 +170,17 @@ public class AnnouncementService implements IAnnouncementService{
 		AnnouncementEntity announcement = announcementRepository.findById(id).get();
         announcement.setStatus(AnnouncementStatus.BLOCKED);
         announcementRepository.save(announcement);	
-		
+	}
+
+	@Override
+	public List<AnnouncementDTO> getAllAnnoucements() {
+		List<AnnouncementDTO> list=new ArrayList<>();
+		List<AnnouncementEntity> announcements=announcementRepository.findByStatus(AnnouncementStatus.ACTIVE);
+		announcements.forEach(e -> {
+			List<ImageEntity> images = imageRepository.findByAnnouncementIdId(e.getId());
+			list.add(new AnnouncementDTO(e, images));
+		});
+		return list;
 	}
 
 }

@@ -27,16 +27,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
     
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
-            "/index.html",
+            "/index.html*",
+            "/signup.html",
             "/style_index.css",
             "/style_index.sass",
+            "/login.html*",
             "/announcement.html",
-            "/style_announcement.css",
-            "/style_announcement.sass",
+            "/announcement.html?id=*",
+            "/style_login.css",
+            "/style_login.sass",
             "/assets/**",
             "/js/**",
-            "/background.jpg",
-            "/logo3.png",
+            "/image/**",
             "/favicon.ico",
             "/swagger-ui.html",
             "/v2/api-docs",
@@ -44,6 +46,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
             "/announcement/all",
             "/user/sign_up",
             "/user/login",
+            "/announcement/all",
+            "/annoucement/id*",
+            "/add.html",
+            "/announcement/search*",
+            "/announcement/category_id*/search*",
             "/announcement/category_id*",
             "/category/all",
             "/announcement/user*"
@@ -61,7 +68,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers("/**/**").authenticated()
+                .antMatchers("/**/**").hasAnyRole("ADMIN, USER")
                 .and()
                 .httpBasic()
                 .and()

@@ -10,6 +10,7 @@ import com.zai.projekt.Request.Announcement;
 
 public interface IAnnouncementService {
 		AnnouncementDTO getAnnouncementById(int announcementId);
+		List<AnnouncementDTO> getAllAnnoucements();
 		List<AnnouncementDTO> getAnnouncementsByUserAuth();
 		List<AnnouncementDTO> getAnnouncementBySearch(String search);
 		List<AnnouncementDTO> getAnnouncementByCategoryId(int id);

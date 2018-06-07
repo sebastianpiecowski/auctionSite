@@ -61,4 +61,13 @@ ALTER TABLE `message` ADD CONSTRAINT `message_fk1` FOREIGN KEY (`owner_id`) REFE
 
 ALTER TABLE `message` ADD CONSTRAINT `message_fk2` FOREIGN KEY (`client_id`) REFERENCES `user`(`id`);
 
-INSERT INTO category VALUES ("Electronics", "Automotive", "Fashion",  "House & Garden", "Sport", "Music", "Education", "Real estate", "Kids", "Pets");
+INSERT INTO category (category_name) VALUES ("Electronics");
+INSERT INTO category (category_name) VALUES ("Automotive");
+INSERT INTO category (category_name) VALUES ("Fashion");
+INSERT INTO category (category_name) VALUES ("House & Garden");
+INSERT INTO category (category_name) VALUES ("Sport");
+INSERT INTO category (category_name) VALUES ("Music");
+INSERT INTO category (category_name) VALUES ("Education");
+INSERT INTO category (category_name) VALUES ("Real estate");
+INSERT INTO category (category_name) VALUES ("Kids");
+INSERT INTO category (category_name) VALUES ("Pets");

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zai.projekt.DTO.UserDTO;
 import com.zai.projekt.IService.IUserService;
+import com.zai.projekt.Repository.UserRepository;
 import com.zai.projekt.Request.Login;
 import com.zai.projekt.Request.SignUp;
 
@@ -28,7 +29,7 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 	
-	@PreAuthorize("hasAnyRole('USER, ADMIN')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@GetMapping(value = "auth", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<UserDTO> getUserById() {
 		UserDTO user = userService.getLoggedUser();
@@ -40,14 +41,19 @@ public class UserController {
 
 		try {
 			UserDTO user = userService.getUserByEmailAndPassword(login.getEmail(), login.getPassword());
+			if(user!=null) {
 			return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
+			}
+			else {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			}
 
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 	}
-	@PreAuthorize("hasAnyRole('USER, ADMIN')")
+	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 	@GetMapping(value = "logout", produces = { MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<Void> logOut(HttpServletRequest request, HttpServletResponse response) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -59,8 +65,19 @@ public class UserController {
 	    
 	}
 	@PostMapping(value = "sign_up", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Void> signUp(@RequestBody SignUp signUp) {
-		userService.addUser(signUp);
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	public ResponseEntity<UserDTO> signUp(@RequestBody SignUp signUp) {
+			try {
+			UserDTO user=userService.addUser(signUp);
+			if(user!=null) {
+			return new ResponseEntity<UserDTO>(user,HttpStatus.CREATED);
+			}
+			else {
+				return new ResponseEntity<UserDTO>(HttpStatus.CONFLICT);
+			}
+			
+			}
+			catch(Exception e) {
+				return new ResponseEntity<UserDTO>(HttpStatus.CONFLICT);
+			}
 	}
 }

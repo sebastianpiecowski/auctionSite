@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="style_index.css" type="text/css">
+  <meta http-equiv="X-UA-Compatible" content="IE"=edge,chrome="1&quot;/">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css" type="text/css">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+  <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script> 
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" crossorigin="anonymous" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
+  <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="js/cookie.js"></script>
+  <script>
+	$( document ).ready(function(){
+	
+   if(document.cookie=="" || document.cookie==null) {
+	   $("#addAnnouncement").hide();
+	   $("#adminAnnouncements").hide();
+	   $("#myAnnouncements").hide();
+	   $("#signout").hide();
+	   $("#logged").hide();
+	   window.location.href = 'http://localhost:8080/index.html';
+   }
+   else if(getCookie("role")=="ADMIN"){
+	   $("#addAnnouncement").show();
+	   $("#adminAnnouncements").show();
+	   $("#logged").show();
+	   $("#logged").text("Logged as: "+getCookie("role"));
+	   $("#signout").show();
+	   $("#signin").hide();
+	   loadAnnoucements("");
+	   
+   }
+   else{
+	   $("#adminAnnouncements").hide();
+	   $("#addAnnouncement").show();
+	   $("#myAnnouncements").show();
+	   $("#logged").text("Logged as: "+getCookie("Role"));
+	   $("#signout").show();
+	   $("#signin").hide();
+	   window.location.href = 'http://localhost:8080/index.html';
+   }
+
+   });
+	const baseURL = 'http://localhost:8080/';
+	function loadAnnoucements(path) {
+		
+		var request = new XMLHttpRequest();
+		var path = "http://localhost:8080/announcement/new";
+		request.onreadystatechange = state_change;
+		request.open("GET", path, true);
+		request.setRequestHeader("Content-Type", "application/json");
+		request.setRequestHeader('Authorization','Basic ' + getCookie("Basic"));
+		request.send();
+		$("#content").empty();
+		function state_change() {
+			if (request.readyState == 4) {
+				if (request.status == 200) {
+					var response = JSON.parse(request.responseText);
+					if (response != null) {
+						
+						for (var i=0; i<response.length; i++) {		
+							if(response[i].status!="CLOSED"){
+								$("#content").append($('<div class="row"><div class="col-md-3 order-1 order-md-2"><button class="btn btn-primary" onclick="confirmAnnouncement('+response[i].id+')">Confirm</button><button class="btn btn-secondary" onclick="blockAnnouncement('+response[i].id+')" style="margin-left:10px;">Block</button><button type="button" onclick="closeAnnouncement('+response[i].id+')" class="btn btn-secondary" style="background-color:#cc6600; margin-left:10px;")">Close </button></div><div class="col-md-6"><a class="lead" href="/announcement.html?id='+response[i].id+'">'+response[i].title+'</a></div><div class="col-md-3"><p class="lead" id="status">STATUS: '+response[i].status+' </p></div></div>'));												
+							}
+							else{
+								$("#content").append($('<div class="row"><div class="col-md-2 order-1 order-md-3"></div><div class="col-md-6"><a class="lead" href="/announcement.html?id='+response[i].id+'">'+response[i].title+'</a></div><div class="col-md-3"><p class="lead" id="status">STATUS: '+response[i].status+' </p></div></div>'));												
+							}
+						}
+					}
+				}
+				else if(request.status == 409) {
+					alert("You don't have any annoucements");
+				}
+				else {
+				alert ('Somethings goes wrong, try again later - load content');
+				
+				}
+			}	  
+		}
+	}
+	function logOut(){
+		deleteAllCookies();
+		location.reload();
+	}
+	function confirmAnnouncement(id){
+		var request = new XMLHttpRequest();
+		var path = baseURL+"announcement/confirm"
+		request.onreadystatechange = state_change;
+		request.open("POST", path, true);
+		request.setRequestHeader("Content-Type", "application/json");
+		request.setRequestHeader('Authorization','Basic ' + getCookie("Basic"));
+		request.send(id);
+		function state_change() {
+			if (request.readyState == 4) {
+				if (request.status == 200) {
+					alert("Annoucement confirmed");
+					location.reload();
+				}
+				else if(request.status == 409) {
+					alert("Don't have permission to confirm annoucements");
+				}
+				else{
+					alert ('Somethings goes wrong');
+					
+				}
+			}
+		};
+	}
+	function closeAnnouncement(id){
+		var request = new XMLHttpRequest();
+		var path = baseURL+"announcement/close"
+		request.onreadystatechange = state_change;
+		request.open("POST", path, true);
+		request.setRequestHeader("Content-Type", "application/json");
+		request.setRequestHeader('Authorization','Basic ' + getCookie("Basic"));
+		request.send(id);
+		function state_change() {
+			if (request.readyState == 4) {
+				if (request.status == 200) {
+					alert("Annoucement closed");
+					location.reload();
+				}
+				else if(request.status == 409) {
+					alert("Don't have permission to close");
+				}
+				else{
+					alert ('Somethings goes wrong');
+					
+				}
+			}
+		};
+	}
+	function blockAnnouncement(id){
+		var request = new XMLHttpRequest();
+		var path = baseURL+"announcement/block"
+		request.onreadystatechange = state_change;
+		request.open("POST", path, true);
+		request.setRequestHeader("Content-Type", "application/json");
+		request.setRequestHeader('Authorization','Basic ' + getCookie("Basic"));
+		request.send(id);
+		function state_change() {
+			if (request.readyState == 4) {
+				if (request.status == 200) {
+					alert("Annoucement blocked");
+					location.reload();
+				}
+				else if(request.status == 409) {
+					alert("Don't have permission to close");
+				}
+				else{
+					alert ('Somethings goes wrong');
+					
+				}
+			}
+		};
+	}
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="image/logo3.png" height="60px" width="200px"> </a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar3SupportedContent" aria-controls="navbar3SupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div> <p class="lead" id="logged">Logged as:  </p>
+      <div class="collapse navbar-collapse text-center" id="navbar3SupportedContent" style="float: right; margin-left: 25%;">
+	  	  <li class="btn navbar-btn mx-5 text-white btn-secondary dropdown">
+            <a class="nav-link dropdown-toggle text-white" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              ENG</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="index.html">
+                ENG</a>
+              <a class="dropdown-item" href="pl/index.html">
+                PL</a>
+            </div>
+          </li>
+        <a class="btn navbar-btn ml-2 text-white btn-primary ml-auto" id="addAnnouncement" href="add.html" style="float: right;">
+          <i class="fa d-inline fa-lg fa-plus-circle" ></i>Add announcement</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" id="myAnnouncements" href="myAnnouncements.html" >
+          <i class="fa d-inline fa-lg fa-inbox"></i>My announcements</a>
+		<a class="btn navbar-btn ml-2 text-white btn-primary" id="adminAnnouncements" href="confirm.html" >
+          <i class="fa d-inline fa-lg fa-inbox"></i>To confirm</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" id="signin" href="login.html">
+          <i class="fa d-inline fa-lg fa-user-circle"></i>Sign in</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" id="signout" href="#" onclick="logOut()">
+          <i class="fa d-inline fa-lg fa-user-circle"></i> Sign out</a>
+      </div>
+    </div>
+    </div>
+  </nav>
+  <div class="p-2">
+    <div class="container">
+      <div class="row"> </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container" id="content">
+      
+    </div>
+  </div>
+</body>
+
+</html>

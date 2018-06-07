@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <title> Shopping site - sign in </title>
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <script src="js/regex.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+  <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script> 
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" crossorigin="anonymous" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
+  <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="js/cookie.js"></script>
+  <script>
+    $(document).ready(function(){
+    		
+    		if(document.cookie!="") {
+    			window.location.href = 'http://localhost:8080/pl/index.html';
+    		}
+    	
+    	   if(document.cookie=="" || document.cookie==null) {
+    		   $("#addAnnouncement").hide();
+    		   $("#adminAnnouncements").hide();
+    		   $("#myAnnouncements").hide();
+    		   $("#signout").hide();
+    		   $("#settings").hide();
+    		   $("#logged").hide();
+    	   }
+    	   else if(getCookie("role")=="ADMIN"){
+    		   $("#addAnnouncement").show();
+    		   $("#adminAnnouncements").show();
+    		   $("#logged").show();
+    		   $("#settings").hide();
+    		   $("#logged").text("Logged as: "+getCookie("role"));
+    		   $("#signout").show();
+    		   $("#signin").hide();
+    		   
+    	   }
+    	   else{
+    		   $("#adminAnnouncements").hide();
+    		   $("#addAnnouncement").show();
+    		   $("#myAnnouncements").show();
+    		   $("#settings").show();
+    		   $("#logged").text("Logged as: "+getCookie("role"));
+    		   $("#signout").show();
+    		   $("#signin").hide();
+    	   }
+    	});
+    		function sendData(){	
+    			var userEmail=document.getElementById("email").value;
+    			var userPassword=document.getElementById("password").value;
+    			if(!userEmail || !userPassword){
+    				alert("Wypelnij wszystkie pola");
+    			}
+    			/*else if(!isEmail(userEmail)) {
+    				alert("Type correct email");
+    			}*/
+    			else {
+    			var request = new XMLHttpRequest();
+    				var path = "http://localhost:8080/user/login";
+    				var data = '{ "email":"'+userEmail+'", "password":"'+userPassword+'"}';
+    				request.onreadystatechange = state_change;
+    				request.open("POST", path, true);
+    				request.setRequestHeader("Content-Type", "application/json");
+    				
+    				request.send(data);
+    
+    						function state_change() {
+    							if (request.readyState == 4) {
+    								if (request.status == 200) {
+    									var response = JSON.parse(request.responseText);
+    									alert("Zalogowano");
+    									createBasic(userEmail, userPassword, response.role);
+    									/*document.cookie="Basic="+btoa(userEmail + ":" + userPassword)+";";
+    									document.cookie="Role="+response.role+";";*/
+    									
+    									window.location.href = 'http://localhost:8080/pl/index.html';
+    								}
+    								else{
+    									alert ('Zle dane logowania');
+    									
+    								}
+    							}
+    						}
+    					}
+    		}
+    	function logOut(){
+    				deleteAllCookies();
+    				location.reload();
+    			}
+  </script>
+  </head>
+
+<body>
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="image/logo3.png" height="60px" width="200px"> </a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar3SupportedContent" aria-controls="navbar3SupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div>
+        <p class="lead" id="logged">Zalogowany jako: </p>
+        <div class="collapse navbar-collapse text-center" id="navbar3SupportedContent" style="float: right; margin-left: 25%;">
+		<li class="btn navbar-btn mx-5 text-white btn-secondary dropdown">
+            <a class="nav-link dropdown-toggle text-white" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              PL</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="../index.html">
+                ENG</a>
+              <a class="dropdown-item" href="index.html">
+                PL</a>
+            </div>
+          </li>
+          <a class="btn navbar-btn ml-2 text-white btn-primary ml-auto" id="addAnnouncement" href="add.html" style="float: right;">
+            <i class="fa d-inline fa-lg fa-plus-circle"></i>Dodaj ogloszenie</a>
+          <a class="btn navbar-btn ml-2 text-white btn-primary" id="myAnnouncements" href="myAnnouncements.html">
+            <i class="fa d-inline fa-lg fa-inbox"></i>Moje ogloszenia</a>
+          <a class="btn navbar-btn ml-2 text-white btn-primary" id="adminAnnouncements" href="confirm.html">
+            <i class="fa d-inline fa-lg fa-inbox"></i>Do potwierdzenia</a>
+          <a class="btn navbar-btn ml-2 text-white btn-primary" id="signin" href="login.html">
+            <i class="fa d-inline fa-lg fa-user-circle"></i>Zaloguj</a>
+          <a class="btn navbar-btn ml-2 text-white btn-primary" id="signout" href="#" onclick="logOut()">
+            <i class="fa d-inline fa-lg fa-user-circle"></i>Wyloguj</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="py-2">
+    <div class="container">
+      <div class="row"> </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2"> </div>
+        <div class="col-md-8">
+          <div class="card text-white bg-primary p-5">
+            <div class="card-body">
+              <h1 class="mb-4">Logowanie</h1>
+              <form>
+                <div class="form-group">
+                  <label>Adres email</label>
+                  <input type="email" name="email" id="email" class="form-control" placeholder="Adres email"> </div>
+                <div class="form-group">
+                  <label>Haslo</label>
+                  <input type="password" name="password" id="password" class="form-control" placeholder="Haslo"> </div>
+                <button type="button" class="btn btn-secondary" onclick="sendData()">Zaloguj</button>
+              </form>
+              <br>
+              <a href="signup.html" class="text-white">
+                <p class="ml-auto">Zarejestruj teraz!</p>
+              </a>
+              <a href="#" class="text-white">
+                <p>Odzyskaj haslo</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2"> </div>
+        <div class="col-md-8"> </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2"> </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
