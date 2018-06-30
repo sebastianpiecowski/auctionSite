@@ -1,289 +1,73 @@
--- phpMyAdmin SQL Dump
--- version 4.7.7
--- https://www.phpmyadmin.net/
---
--- Host: localhost
--- Czas generowania: 25 Mar 2018, 19:49
--- Wersja serwera: 5.7.20-log
--- Wersja PHP: 7.1.13
+﻿CREATE DATABASE auctsite;
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Baza danych: `auctsite`
---
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `announcement`
---
-
-CREATE TABLE `announcement` (
-  `announcement_id` int(11) NOT NULL,
-  `title` varchar(50) NOT NULL,
-  `description` varchar(1000) NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Zrzut danych tabeli `announcement`
---
-
-INSERT INTO `announcement` (`announcement_id`, `title`, `description`, `price`, `user_id`, `status_id`, `start_date`, `end_date`, `category_id`) VALUES
-(1, 'I have for sale PC', 'PC: i5 6600k, 8GB of Ram, new PowerSupply (Corsair). I want 3000zł for my Pc, please contact me if you are intrested in.', '3000.00', 1, 1, '2018-03-26', '2018-03-30', 1);
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `category`
---
-
-CREATE TABLE `category` (
-  `category_id` int(11) NOT NULL,
-  `category_name` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Zrzut danych tabeli `category`
---
-
-INSERT INTO `category` (`category_id`, `category_name`) VALUES
-(1, 'Electronics'),
-(2, 'Motors'),
-(3, 'Fashion'),
-(4, 'Home & Garden'),
-(5, 'Toys'),
-(6, 'Sporting goods'),
-(7, 'Music'),
-(8, 'Collectibles & Arts');
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `image`
---
-
-CREATE TABLE `image` (
-  `image_id` int(11) NOT NULL,
-  `image` blob NOT NULL,
-  `announcement_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `message`
---
-
-CREATE TABLE `message` (
-  `announcement_id` int(11) NOT NULL,
-  `owner_id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL,
-  `message_id` int(11) NOT NULL,
-  `message` varchar(1000) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `role`
---
-
-CREATE TABLE `role` (
-  `role_id` int(11) NOT NULL,
-  `role` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Zrzut danych tabeli `role`
---
-
-INSERT INTO `role` (`role_id`, `role`) VALUES
-(1, 'admin'),
-(2, 'editor'),
-(3, 'user');
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `status`
---
-
-CREATE TABLE `status` (
-  `status_id` int(11) NOT NULL,
-  `status` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Zrzut danych tabeli `status`
---
-
-INSERT INTO `status` (`status_id`, `status`) VALUES
-(1, 'lobby'),
-(2, 'displayed'),
-(3, 'terminated');
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `subcategory`
---
-
-CREATE TABLE `subcategory` (
-  `category_id` int(11) NOT NULL,
-  `name` varchar(30) NOT NULL,
-  `parent_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `user`
---
+USE auctsite;
 
 CREATE TABLE `user` (
-  `user_id` int(11) NOT NULL,
-  `email` varchar(30) NOT NULL,
-  `password` varchar(20) NOT NULL,
-  `name` varchar(20) NOT NULL,
-  `surname` varchar(20) NOT NULL,
-  `phone_number` varchar(12) DEFAULT NULL,
-  `city` varchar(20) NOT NULL,
-  `role` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`email` varchar(30) NOT NULL UNIQUE,
+	`password` varchar(255) NOT NULL,
+	`name` varchar(20) NOT NULL,
+	`surname` varchar(20) NOT NULL,
+	`phone_number` varchar(12),
+	`city` varchar(20) NOT NULL,
+	`role` varchar(20) NOT NULL,
+	PRIMARY KEY (`id`)
+);
 
---
--- Zrzut danych tabeli `user`
---
+CREATE TABLE `announcement` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`title` varchar(50) NOT NULL,
+	`description` varchar(1000) NOT NULL,
+	`price` DECIMAL(10,2) NOT NULL,
+	`user_id` INT NOT NULL,
+	`status` varchar(20) NOT NULL,
+	`start_date` DATE NOT NULL,
+	`end_date` DATE NOT NULL,
+	`category_id` INT NOT NULL,
+	PRIMARY KEY (`id`)
+);
 
-INSERT INTO `user` (`user_id`, `email`, `password`, `name`, `surname`, `phone_number`, `city`, `role`) VALUES
-(1, 'test@test.pl', 'test', 'test', 'test', '555555555', 'test', 3);
+CREATE TABLE `image` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`image` MEDIUMTEXT NOT NULL,
+	`announcement_id` INT NOT NULL,
+	PRIMARY KEY (`id`)
+);
 
---
--- Indeksy dla zrzutów tabel
---
+CREATE TABLE `category` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`category_name` varchar(30) NOT NULL,
+	PRIMARY KEY (`id`)
+);
 
---
--- Indeksy dla tabeli `announcement`
---
-ALTER TABLE `announcement`
-  ADD PRIMARY KEY (`announcement_id`),
-  ADD KEY `userId` (`user_id`),
-  ADD KEY `categoryId` (`category_id`),
-  ADD KEY `statusId` (`status_id`);
+CREATE TABLE `message` (
+	`id` INT NOT NULL auto_increment,
+	`announcement_id` INT NOT NULL,
+	`owner_id` INT NOT NULL,
+	`client_id` INT NOT NULL,
+	`message` varchar(1000) NOT NULL,
+    primary key (`id`)
+);
 
---
--- Indeksy dla tabeli `category`
---
-ALTER TABLE `category`
-  ADD PRIMARY KEY (`category_id`);
+ALTER TABLE `announcement` ADD CONSTRAINT `announcement_fk0` FOREIGN KEY (`user_id`) REFERENCES `user`(`id`);
 
---
--- Indeksy dla tabeli `image`
---
-ALTER TABLE `image`
-  ADD PRIMARY KEY (`image_id`);
+ALTER TABLE `announcement` ADD CONSTRAINT `announcement_fk1` FOREIGN KEY (`category_id`) REFERENCES `category`(`id`);
 
---
--- Indeksy dla tabeli `role`
---
-ALTER TABLE `role`
-  ADD PRIMARY KEY (`role_id`);
+ALTER TABLE `image` ADD CONSTRAINT `image_fk0` FOREIGN KEY (`announcement_id`) REFERENCES `announcement`(`id`);
 
---
--- Indeksy dla tabeli `status`
---
-ALTER TABLE `status`
-  ADD PRIMARY KEY (`status_id`);
+ALTER TABLE `message` ADD CONSTRAINT `message_fk0` FOREIGN KEY (`announcement_id`) REFERENCES `announcement`(`id`);
 
---
--- Indeksy dla tabeli `subcategory`
---
-ALTER TABLE `subcategory`
-  ADD PRIMARY KEY (`category_id`),
-  ADD UNIQUE KEY `parentCategoryId` (`parent_id`);
+ALTER TABLE `message` ADD CONSTRAINT `message_fk1` FOREIGN KEY (`owner_id`) REFERENCES `user`(`id`);
 
---
--- Indeksy dla tabeli `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `email` (`email`);
+ALTER TABLE `message` ADD CONSTRAINT `message_fk2` FOREIGN KEY (`client_id`) REFERENCES `user`(`id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT dla tabeli `announcement`
---
-ALTER TABLE `announcement`
-  MODIFY `announcement_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT dla tabeli `category`
---
-ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT dla tabeli `image`
---
-ALTER TABLE `image`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT dla tabeli `status`
---
-ALTER TABLE `status`
-  MODIFY `status_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT dla tabeli `subcategory`
---
-ALTER TABLE `subcategory`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT dla tabeli `user`
---
-ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- Ograniczenia dla zrzutów tabel
---
-
---
--- Ograniczenia dla tabeli `announcement`
---
-ALTER TABLE `announcement`
-  ADD CONSTRAINT `announcement_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `announcement_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`),
-  ADD CONSTRAINT `announcement_ibfk_3` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`);
-
---
--- Ograniczenia dla tabeli `subcategory`
---
-ALTER TABLE `subcategory`
-  ADD CONSTRAINT `subcategory_fk0` FOREIGN KEY (`parent_id`) REFERENCES `category` (`category_id`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+INSERT INTO category (category_name) VALUES ("Electronics");
+INSERT INTO category (category_name) VALUES ("Automotive");
+INSERT INTO category (category_name) VALUES ("Fashion");
+INSERT INTO category (category_name) VALUES ("House & Garden");
+INSERT INTO category (category_name) VALUES ("Sport");
+INSERT INTO category (category_name) VALUES ("Music");
+INSERT INTO category (category_name) VALUES ("Education");
+INSERT INTO category (category_name) VALUES ("Real estate");
+INSERT INTO category (category_name) VALUES ("Kids");
+INSERT INTO category (category_name) VALUES ("Pets");

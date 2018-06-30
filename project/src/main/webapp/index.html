@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="style_index.css" type="text/css">
+  <meta http-equiv="X-UA-Compatible" content="IE"=edge,chrome="1&quot;/">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/minified/jquery-ui.min.css" type="text/css">
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+  <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script> 
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" crossorigin="anonymous" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" crossorigin="anonymous" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript"></script>
+  <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="js/cookie.js"></script>
+  <script>
+   
+   $( document ).ready(function(){
+   if(document.cookie=="" || document.cookie==null) {
+	   $("#addAnnouncement").hide();
+	   $("#adminAnnouncements").hide();
+	   $("#myAnnouncements").hide();
+	   $("#signout").hide();
+	   $("#logged").hide();
+   }
+   else if(getCookie("role")=="ADMIN"){
+	   $("#addAnnouncement").show();
+	   $("#adminAnnouncements").show();
+	   $("#logged").show();
+	   $("#logged").text("Logged as: "+getCookie("role"));
+	   $("#signout").show();
+	   $("#signin").hide();
+	   
+   }
+   else{
+	   $("#adminAnnouncements").hide();
+	   $("#addAnnouncement").show();
+	   $("#myAnnouncements").show();
+	   $("#logged").text("Logged as: "+getCookie("role"));
+	   $("#signout").show();
+	   $("#signin").hide();
+   }
+   
+   loadAnnoucements("announcement/all")
+   });
+            const baseURL = 'http://localhost:8080/';
+			const announcementOnPage=12;
+			var page=1;
+			var annoucements;
+            function loadAnnoucements(path) {
+				
+				var request = new XMLHttpRequest();
+				var path = baseURL+path;
+				request.onreadystatechange = state_change;
+				request.open("GET", path, true);
+				request.setRequestHeader("Content-Type", "application/json");
+				request.send();
+				$("#announcement").empty();
+				function state_change() {
+					if (request.readyState == 4) {
+						if (request.status == 200) {
+							var response = JSON.parse(request.responseText);
+							if (response != null) {
+								var selectPage=document.getElementById("selectPage");
+								selectPage.style.display="block";
+									if(response.length==0){	
+										selectPage.style.display="none";
+									}
+								else
+								for (var i=0; i<response.length & i<announcementOnPage; i++) {
+									if (response[i].images == null || response[i].images.length == 0) {
+									$("#announcement").append($('<div class="col-md-4 py-2" id="'+response[i].id+'"><div class="card"><img class="card-img-top" src="image/no-image.png" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+response[i].title+'</h5><p class="card-text">Price :'+response[i].price+'</p><p class="card-text">Validity '+formatDate(response[i].startDate)+' to '+formatDate(response[i].endDate)+'</p><a href="announcement.html?id='+response[i].id+'" class="btn btn-primary">More</a></div></div></div>'));										
+									}
+									else {
+										$("#announcement").append($('<div class="col-md-4 py-2" id="'+response[i].id+'"><div class="card"><img class="card-img-top" src="'+response[i].images[0]+'" height="200px" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+response[i].title+'</h5><p class="card-text">Price :'+response[i].price+'</p><p class="card-text">Validity '+formatDate(response[i].startDate)+' to '+formatDate(response[i].endDate)+'</p><a href="announcement.html?id='+response[i].id+'" class="btn btn-primary">More</a></div></div></div>'));
+									}
+									document.getElementById("prevPageBtn").disabled = true;
+								}
+								if (response.length > page*announcementOnPage) {
+									$("#nextPageBtn").removeClass("disabled");
+								}
+								annoucements = response;
+							}
+						}
+						else {
+							alert ('Somethings goes wrong, try again later - load content');
+							
+						}
+					}
+				}  
+			}
+			function formatDate(date){
+				var formatedDate=$.datepicker.formatDate('yy-mm-dd', new Date(date));
+				return formatedDate;
+			}
+			function nextPage(){
+				if (annoucements.length >= page*announcementOnPage) {
+					$("#announcement").empty();
+					page++;
+					$("#pageCounter").text(page);
+					for (var i=announcementOnPage*(page-1); i<annoucements.length & i<announcementOnPage*page; i++) {
+						if (annoucements[i].images == null || annoucements[i].images.length == 0) {
+							$("#announcement").append($('<div class="col-md-4 py-2" id="'+annoucements[i].id+'"><div class="card"><img class="card-img-top" src="image/no-image.png"  alt="Card image cap"><div class="card-body"><h5 class="card-title">'+annoucements[i].title+'</h5><p class="card-text">Price :'+annoucements[i].price+'</p><p class="card-text">Validity '+formatDate(annoucements[i].startDate)+' to '+formatDate(annoucements[i].endDate)+'</p><a href="announcement.html?id='+annoucements[i].id+'" class="btn btn-primary">More</a></div></div></div>'));
+						}
+						else {
+							$("#announcement").append($('<div class="col-md-4 py-2" id="'+annoucements[i].id+'"><div class="card"><img class="card-img-top" src="'+annoucements[i].images[0]+'" height="200px" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+annoucements[i].title+'</h5><p class="card-text">Price :'+annoucements[i].price+'</p><p class="card-text">Validity '+formatDate(annoucements[i].startDate)+' to '+formatDate(annoucements[i].endDate)+'</p><a href="announcement.html?id='+annoucements[i].id+'" class="btn btn-primary">More</a></div></div></div>'));
+						}
+					}
+				}
+			}
+			function logOut(){
+				deleteAllCookies();
+				location.reload();
+			}
+			function prevPage(){
+				if (page > 1) {
+					$("#announcement").empty();
+						page--;
+					$("#nextPageBtn").removeClass("disabled");
+					$("#pageCounter").text(page);
+					for (var i=announcementOnPage*(page-1); i<annoucements.length & i<announcementOnPage*page; i++) {
+						if (annoucements[i].images == null || annoucements[i].images.length == 0) {
+							$("#announcement").append($('<div class="col-md-4 py-2" id="'+annoucements[i].id+'"><div class="card"><img class="card-img-top" src="image/no-image.png" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+annoucements[i].title+'</h5><p class="card-text">Price :'+annoucements[i].price+'</p><p class="card-text">Validity '+formatDate(annoucements[i].startDate)+' to '+formatDate(annoucements[i].endDate)+'</p><a href="announcement.html?id='+annoucements[i].id+'" class="btn btn-primary">More</a></div></div></div>'));
+						}
+						else {
+							$("#announcement").append($('<div class="col-md-4 py-2" id="'+annoucements[i].id+'"><div class="card"><img class="card-img-top" src="'+annoucements[i].images[0]+'" height="200px" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+annoucements[i].title+'</h5><p class="card-text">Price :'+annoucements[i].price+'</p><p class="card-text">Validity '+formatDate(annoucements[i].startDate)+' to '+formatDate(annoucements[i].endDate)+'</p><a href="announcement.html?id='+annoucements[i].id+'" class="btn btn-primary">More</a></div></div></div>'));
+						}
+					}
+				}
+			}
+			function changeFormCategory(text, value){
+				$("#rootBtn").val(value);
+				document.getElementById("rootBtn").innerHTML=text;
+			}
+			function searchContent(){
+				var val=$("#rootBtn").val();
+				var search=$("#inlineFormInput").val();
+				
+				if(search!="")
+				{
+					if(val>0){
+						loadAnnoucements("announcement/category_id="+val+"/search="+search);
+					}
+					else{
+						loadAnnoucements("announcement/search="+search);
+					}
+				}
+			}
+   </script>
+  <style type="text/css">
+	.categoryBtn {
+		border-color: #ddd #ddd transparent;
+		border-radius: 0.25rem;
+		display: block;
+		padding: 0.5rem 1rem;
+		border: 1px solid transparent;
+		border-top-left-radius: 0.25rem;
+		border-top-right-radius: 0.25rem;
+		margin-bottom: -1px;
+	}
+	.categoryBtn:hover {
+		background-color: #e6b800;
+	}
+	.categoryBtn:focus {
+		background-color: #e6b800;
+		color: white;
+	}
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/index.html">
+        <img src="image/logo3.png" height="60px" width="200px"> </a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar3SupportedContent" aria-controls="navbar3SupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+	  <div> <p class="lead" id="logged">Logged as:  </p>	
+      <div class="collapse navbar-collapse text-center" id="navbar3SupportedContent" style="float: right; margin-left: 25%;">
+	  <li class="btn navbar-btn mx-5 text-white btn-secondary dropdown">
+            <a class="nav-link dropdown-toggle text-white" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              ENG</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="index.html">
+                ENG</a>
+              <a class="dropdown-item" href="pl/index.html">
+                PL</a>
+            </div>
+          </li>
+        <a class="btn navbar-btn ml-2 text-white btn-primary ml-auto" id="addAnnouncement" href="add.html" style="float: right;">
+          <i class="fa d-inline fa-lg fa-plus-circle" ></i>Add announcement</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" id="myAnnouncements" href="myAnnouncements.html" >
+          <i class="fa d-inline fa-lg fa-inbox"></i>My announcements</a>
+		<a class="btn navbar-btn ml-2 text-white btn-primary" id="adminAnnouncements" href="confirm.html" >
+          <i class="fa d-inline fa-lg fa-inbox"></i>To confirm</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" id="signin" href="login.html">
+          <i class="fa d-inline fa-lg fa-user-circle"></i>Sign in</a>
+        <a class="btn navbar-btn ml-2 text-white btn-primary" id="signout" href="#" onclick="logOut()">
+          <i class="fa d-inline fa-lg fa-user-circle"></i> Sign out</a>
+      </div>
+    </div>
+  </nav>
+  <div class="p-2">
+    <div class="container">
+      <div class="row"> </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9 w-100">
+          <form class="form-inline">
+            <input type="text" class="form-control w-100" id="inlineFormInput" placeholder="Type what you looking for" pattern="[^'\x22]+"> 
+        </div>
+        <div class="col-md-2">
+          <div class="btn-group">
+            <button class="btn btn-outline-primary dropdown-toggle" id="rootBtn" data-toggle="dropdown" value="0"> Category </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Electronics',1)">Electronics</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Automotive',2)">Automotive</a>
+			  <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Fashion', 3)">Fashion</a>
+			  <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('House & Garden', 4)">House & Garden</a>
+			  <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Sport', 5)">Sport</a>
+			  <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Music', 6)">Music</a>
+			  <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Education', 7)">Education</a>
+			  <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Real estate', 8)">Real estate</a>
+			  <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Kids', 9)">Kids</a>
+			  <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" id="formCategory" onclick="changeFormCategory('Pets', 10)">Pets</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1">
+          <a class="btn btn-primary" onclick="searchContent()" href="#">Search</a>
+        </div>
+		</form>
+      </div>
+      <div class="row py-5">
+        <div class="col-md-2 offset-md-2" >
+          <div class="row">
+            <div class="col-4 col-md-12">
+			
+              <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+					<a onclick="loadAnnoucements('announcement/category_id=1')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="1">Electronics</a>
+					<a onclick="loadAnnoucements('announcement/category_id=2')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="2">Automotive</a>
+					<a onclick="loadAnnoucements('announcement/category_id=3')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="3">Fashion</a>
+					<a onclick="loadAnnoucements('announcement/category_id=4')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="4">House & Garden</a>
+					<a onclick="loadAnnoucements('announcement/category_id=5')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="5">Sport</a>
+					<a onclick="loadAnnoucements('announcement/category_id=6')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="6">Music</a>
+					<a onclick="loadAnnoucements('announcement/category_id=7')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="7">Education</a>
+					<a onclick="loadAnnoucements('announcement/category_id=8')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="8">Real estate</a>
+					<a onclick="loadAnnoucements('announcement/category_id=9')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="9">Kids</a>
+					<a onclick="loadAnnoucements('announcement/category_id=10')" href="#" class="categoryBtn" data-toggle="pill" data-target="#tabone" id="10">Pets</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-10">
+		    <div class="row" id="announcement">
+			
+		    </div>
+			<div class="col-md-2 mx-auto" id="selectPage">
+            <ul class="pagination" >
+              <li class="page-item" > 
+                <a class="page-link"  id="prevPageBtn" onclick="prevPage()" disabled>
+                  <span>«</span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <p class="page-link" id="pageCounter" >1</p>
+              </li>
+              <li class="page-item">
+                <a class="page-link" id="nextPageBtn" onclick="nextPage()">
+                  <span>»</span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12"> </div>
+      </div>
+    </div> 
+  </div>	
+</body>
+
+</html>
