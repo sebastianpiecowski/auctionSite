@@ -75,10 +75,10 @@
 								else
 								for (var i=0; i<response.length & i<announcementOnPage; i++) {
 									if (response[i].images == null || response[i].images.length == 0) {
-									$("#announcement").append($('<div class="col-md-4 py-2" id="'+response[i].id+'"><div class="card"><img class="card-img-top" src="image/no-image.png" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+response[i].title+'</h5><p class="card-text">Price :'+response[i].price+'</p><p class="card-text">Validity '+formatDate(response[i].startDate)+' to '+formatDate(response[i].endDate)+'</p><a href="announcement.html?id='+response[i].id+'" class="btn btn-primary">More</a></div></div></div>'));										
+									$("#announcement").append($('<div class="col-md-4 py-2" id="'+response[i].id+'"><div class="card"><img class="card-img-top" src="image/no-image.png" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+response[i].title+'</h5><p class="card-text">Cena :'+response[i].price+'</p><p class="card-text">Aktywne '+formatDate(response[i].startDate)+' do '+formatDate(response[i].endDate)+'</p><a href="announcement.html?id='+response[i].id+'" class="btn btn-primary">Wiecej</a></div></div></div>'));										
 									}
 									else {
-										$("#announcement").append($('<div class="col-md-4 py-2" id="'+response[i].id+'"><div class="card"><img class="card-img-top" src="'+response[i].images[0]+'" height="200px" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+response[i].title+'</h5><p class="card-text">Price :'+response[i].price+'</p><p class="card-text">Validity '+formatDate(response[i].startDate)+' to '+formatDate(response[i].endDate)+'</p><a href="announcement.html?id='+response[i].id+'" class="btn btn-primary">More</a></div></div></div>'));
+										$("#announcement").append($('<div class="col-md-4 py-2" id="'+response[i].id+'"><div class="card"><img class="card-img-top" src="'+response[i].images[0]+'" height="200px" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+response[i].title+'</h5><p class="card-text">Cena :'+response[i].price+'</p><p class="card-text">Aktywne '+formatDate(response[i].startDate)+' do '+formatDate(response[i].endDate)+'</p><a href="announcement.html?id='+response[i].id+'" class="btn btn-primary">Wiecej</a></div></div></div>'));
 									}
 									document.getElementById("prevPageBtn").disabled = true;
 								}
@@ -106,10 +106,10 @@
 					$("#pageCounter").text(page);
 					for (var i=announcementOnPage*(page-1); i<annoucements.length & i<announcementOnPage*page; i++) {
 						if (annoucements[i].images == null || annoucements[i].images.length == 0) {
-							$("#announcement").append($('<div class="col-md-4 py-2" id="'+annoucements[i].id+'"><div class="card"><img class="card-img-top" src="image/no-image.png"  alt="Card image cap"><div class="card-body"><h5 class="card-title">'+annoucements[i].title+'</h5><p class="card-text">Price :'+annoucements[i].price+'</p><p class="card-text">Validity '+formatDate(annoucements[i].startDate)+' to '+formatDate(annoucements[i].endDate)+'</p><a href="announcement.html?id='+annoucements[i].id+'" class="btn btn-primary">More</a></div></div></div>'));
+							$("#announcement").append($('<div class="col-md-4 py-2" id="'+annoucements[i].id+'"><div class="card"><img class="card-img-top" src="image/no-image.png"  alt="Card image cap"><div class="card-body"><h5 class="card-title">'+annoucements[i].title+'</h5><p class="card-text">Cena :'+annoucements[i].price+'</p><p class="card-text">Aktywne '+formatDate(annoucements[i].startDate)+' do '+formatDate(annoucements[i].endDate)+'</p><a href="announcement.html?id='+annoucements[i].id+'" class="btn btn-primary">Wiecej</a></div></div></div>'));
 						}
 						else {
-							$("#announcement").append($('<div class="col-md-4 py-2" id="'+annoucements[i].id+'"><div class="card"><img class="card-img-top" src="'+annoucements[i].images[0]+'" height="200px" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+annoucements[i].title+'</h5><p class="card-text">Price :'+annoucements[i].price+'</p><p class="card-text">Validity '+formatDate(annoucements[i].startDate)+' to '+formatDate(annoucements[i].endDate)+'</p><a href="announcement.html?id='+annoucements[i].id+'" class="btn btn-primary">More</a></div></div></div>'));
+							$("#announcement").append($('<div class="col-md-4 py-2" id="'+annoucements[i].id+'"><div class="card"><img class="card-img-top" src="'+annoucements[i].images[0]+'" height="200px" alt="Card image cap"><div class="card-body"><h5 class="card-title">'+annoucements[i].title+'</h5><p class="card-text">Cena :'+annoucements[i].price+'</p><p class="card-text">Aktywne '+formatDate(annoucements[i].startDate)+' do '+formatDate(annoucements[i].endDate)+'</p><a href="announcement.html?id='+annoucements[i].id+'" class="btn btn-primary">Wiecej</a></div></div></div>'));
 						}
 					}
 				}
